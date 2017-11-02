@@ -5,6 +5,11 @@ setenforce 0
 
 # Set working dir
 cd /home/opc
+# Workaround apt metadata checksum mismatch issue
+apt-get clean; until apt-get update; do sleep 1 && echo -n "."; done
+
+# Install Docker dependencies
+until apt-get install -y aufs-tools cgroupfs-mount libltdl7; do sleep 1 && echo -n "."; done
 
 # enable ol7 addons
 yum-config-manager --disable ol7_UEKR3
