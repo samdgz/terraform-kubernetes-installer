@@ -36,7 +36,7 @@ resource "oci_core_security_list" "K8SWorkerSubnet" {
     },
     {
       tcp_options {
-        "min" = 30000
+        "min" = 8000
         "max" = 32767
       }
 
