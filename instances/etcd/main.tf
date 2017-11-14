@@ -1,14 +1,15 @@
 /**
  * The instances/etcd module provisions and configures one or more etcd instances.
  */
-
+/*image               = "${lookup(data.oci_core_images.ImageOCID.images[0], "id")}"
+*/
 resource "oci_core_instance" "TFInstanceEtcd" {
   count               = "${var.count}"
   availability_domain = "${var.availability_domain}"
   compartment_id      = "${var.compartment_ocid}"
   display_name        = "${var.label_prefix}${var.display_name}-${count.index}"
   hostname_label      = "${var.hostname_label}-${count.index}"
-  image               = "${lookup(data.oci_core_images.ImageOCID.images[0], "id")}"
+  image               = "${var.oci_core_image}"  
   shape               = "${var.shape}"
   subnet_id           = "${var.subnet_id}"
 
