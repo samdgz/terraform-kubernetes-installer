@@ -37,7 +37,6 @@ variable "count" {
   default = "1"
 }
 
-<<<<<<< HEAD
 variable "etcd_docker_max_log_size" {
   description = "Maximum size of the etcd docker container json logs"
   default = "50m"
@@ -50,6 +49,3 @@ variable "etcd_docker_max_log_files" {
 variable "oci_core_image" {
   default = "ocid1.image.oc1.iad.aaaaaaaahqfv2inssrwfu6arffox3zubxm4swql4hht6t5fk4m5ilfzomgda"
 }
-=======
-variable "oci_core_image" {}
->>>>>>> Update variables.tf
