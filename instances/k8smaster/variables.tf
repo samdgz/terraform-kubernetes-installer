@@ -69,3 +69,7 @@ variable "master_docker_max_log_files" {
   description = "Maximum number of k8s master docker container json logs to rotate"
   default = "5"
 }
+
+variable "oci_core_image" {
+  default = "ocid1.image.oc1.iad.aaaaaaaahqfv2inssrwfu6arffox3zubxm4swql4hht6t5fk4m5ilfzomgda"
+}
