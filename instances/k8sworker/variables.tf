@@ -55,6 +55,7 @@ variable "api_server_cert_pem" {}
 
 # etcd
 variable "etcd_discovery_url" {}
+<<<<<<< HEAD
 variable "etcd_endpoints" {}
 
 variable "worker_docker_max_log_size" {
@@ -82,4 +83,6 @@ variable "worker_iscsi_volume_mount" {
   default = "/var/lib/docker"
 }
 
-variable "image" {}
+variable "oci_core_image" {
+  default = "ocid1.image.oc1.iad.aaaaaaaahqfv2inssrwfu6arffox3zubxm4swql4hht6t5fk4m5ilfzomgda"
+}
