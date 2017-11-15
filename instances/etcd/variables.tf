@@ -37,4 +37,4 @@ variable "count" {
   default = "1"
 }
 
-variable "oci_core_image" {}
+variable "image" {}
