@@ -60,4 +60,4 @@ variable "k8s_apiserver_token_admin" {}
 # etcd
 variable "etcd_discovery_url" {}
 
-variable "oci_core_image" {}
+variable "image" {}
