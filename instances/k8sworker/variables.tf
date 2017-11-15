@@ -57,4 +57,4 @@ variable "api_server_cert_pem" {}
 # etcd
 variable "etcd_discovery_url" {}
 
-variable "oci_core_image" {}
+variable "image" {}
