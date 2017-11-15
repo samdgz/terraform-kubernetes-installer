@@ -9,7 +9,7 @@ resource "oci_core_instance" "TFInstanceEtcd" {
   compartment_id      = "${var.compartment_ocid}"
   display_name        = "${var.label_prefix}${var.display_name}-${count.index}"
   hostname_label      = "${var.hostname_label}-${count.index}"
-  image               = "${var.oci_core_image}"  
+  image               = "${var.image}"  
   shape               = "${var.shape}"
   subnet_id           = "${var.subnet_id}"
 
