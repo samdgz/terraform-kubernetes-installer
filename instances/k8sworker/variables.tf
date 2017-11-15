@@ -71,4 +71,4 @@ variable "docker_device" {
   default = ""
 }
 
-variable "oci_core_image" {}
+variable "image" {}
