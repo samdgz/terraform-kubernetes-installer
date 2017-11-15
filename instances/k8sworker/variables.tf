@@ -83,4 +83,4 @@ variable "worker_iscsi_volume_mount" {
   default = "/var/lib/docker"
 }
 
-variable "oci_core_image" {}
+variable "image" {}
