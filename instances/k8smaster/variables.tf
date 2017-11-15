@@ -70,4 +70,4 @@ variable "master_docker_max_log_files" {
   default = "5"
 }
 
-variable "oci_core_image" {}
+variable "image" {}
