@@ -11,7 +11,7 @@ resource "oci_core_instance" "TFInstanceK8sMaster" {
   compartment_id      = "${var.compartment_ocid}"
   display_name        = "${var.label_prefix}${var.display_name_prefix}-${count.index}"
   hostname_label      = "${var.hostname_label_prefix}-${count.index}"
-  image               = "${var.oci_core_image}"
+  image               = "${var.image}"
   shape               = "${var.shape}"
   subnet_id           = "${var.subnet_id}"
 
