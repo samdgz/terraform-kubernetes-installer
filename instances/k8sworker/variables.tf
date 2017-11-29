@@ -55,7 +55,6 @@ variable "api_server_cert_pem" {}
 
 # etcd
 variable "etcd_discovery_url" {}
-<<<<<<< HEAD
 variable "etcd_endpoints" {}
 
 variable "worker_docker_max_log_size" {
