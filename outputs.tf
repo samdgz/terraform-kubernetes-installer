@@ -30,6 +30,14 @@ output "vcn_id" {
   value = "${module.vcn.id}"
 }
 
+output "vcn_route_for_complete_id" {
+  value = "${module.vcn.route_for_complete_id}"
+}
+
+output "vcn_dhcp_options_id" {
+  value = "${module.vcn.dhcp_options_id}"
+}
+
 output "etcd_subnet_ids" {
   value = ["${module.vcn.etcd_subnet_ad1_id}", "${module.vcn.etcd_subnet_ad2_id}", "${module.vcn.etcd_subnet_ad3_id}"]
 }
