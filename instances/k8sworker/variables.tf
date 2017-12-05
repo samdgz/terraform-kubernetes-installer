@@ -70,5 +70,3 @@ variable "worker_docker_max_log_files" {
 variable "docker_device" {
   default = ""
 }
-
-variable "image" {}
