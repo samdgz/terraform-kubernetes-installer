@@ -33,6 +33,11 @@ write_files:
     encoding: b64
     content: |
       ${kube_proxy_template_content}
+  - path: "/etc/kubernetes/manifests/encryption-provider-config.yaml"
+    permissions: "0755"
+    encoding: b64
+    content: |
+      ${etcd_encryption_template_content}
   - path: "/etc/kubernetes/manifests/kube-scheduler.yaml"
     permissions: "0755"
     encoding: b64

@@ -84,6 +84,9 @@ curl -s --retry 3 https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-ke
 echo 'deb http://apt.kubernetes.io/ kubernetes-xenial main' >/etc/apt/sources.list.d/kubernetes.list
 apt-get update
 
+#install uuid for creating encryption key for etcd encryption provider
+apt-get install -y uuid
+
 # install kubelet
 apt-get install -y kubelet=${k8s_ver}-00 kubectl
 
