@@ -5,18 +5,23 @@ setenforce 0
 
 # Set working dir
 cd /home/opc
-# Workaround apt metadata checksum mismatch issue
-apt-get clean; until apt-get update; do sleep 1 && echo -n "."; done
 
 # Workaround apt metadata checksum mismatch issue
-apt-get clean; until apt-get update; do sleep 1 && echo -n "."; done
+#apt-get clean; until apt-get update; do sleep 1 && echo -n "."; done
+
+
+# Workaround apt metadata checksum mismatch issue
+#apt-get clean; until apt-get update; do sleep 1 && echo -n "."; done
 
 # Install Docker dependencies
-until apt-get install -y aufs-tools cgroupfs-mount libltdl7; do sleep 1 && echo -n "."; done
+#until apt-get install -y aufs-tools cgroupfs-mount libltdl7; do sleep 1 && echo -n "."; done
 
 # enable ol7 addons
 yum-config-manager --disable ol7_UEKR3
 yum-config-manager --enable ol7_addons ol7_latest ol7_UEKR4 ol7_optional ol7_optional_latest
+
+# Workaround for yum metadata checksum mismatch issue
+yum clean all; rm -rf /var/cache/yum; yum update -y
 
 # Install Docker
 until yum -y install docker-engine-${docker_ver}; do sleep 1 && echo -n "."; done
