@@ -50,6 +50,10 @@ variable "k8s_dns_ver" {
   default = "1.14.2"
 }
 
+variable "encryption_secret" {
+  default = "7UeIkfo16qCDf+EPovyiARe1C419xwP/q8CtSmf6WDk="
+}
+
 variable "api_server_count" {}
 variable "etcd_lb" {}
 variable "root_ca_pem" {}

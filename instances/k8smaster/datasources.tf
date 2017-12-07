@@ -32,6 +32,14 @@ data "template_file" "setup-preflight" {
   }
 }
 
+data "template_file" "etcd-encryption" {
+  template = "${file("${path.module}/manifests/encryption-provider-config.yaml")}"
+
+  vars = {
+    encryption_secret = "${var.encryption_secret}"
+  }
+}
+
 data "template_file" "kube-apiserver" {
   template = "${file("${path.module}/manifests/kube-apiserver.yaml")}"
 
@@ -128,6 +136,7 @@ data "template_file" "kube_master_cloud_init_file" {
     setup_preflight_sh_content               = "${base64encode(data.template_file.setup-preflight.rendered)}"
     setup_template_sh_content                = "${base64encode(data.template_file.setup-template.rendered)}"
     kube_apiserver_template_content          = "${base64encode(data.template_file.kube-apiserver.rendered)}"
+    etcd_encryption_template_content          = "${base64encode(data.template_file.etcd-encryption.rendered)}"
     kube_controller_manager_template_content = "${base64encode(data.template_file.kube-controller-manager.rendered)}"
     kube_dns_template_content                = "${base64encode(data.template_file.kube-dns.rendered)}"
     kube_proxy_template_content              = "${base64encode(data.template_file.kube-proxy.rendered)}"
