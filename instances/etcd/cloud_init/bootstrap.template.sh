@@ -1,5 +1,9 @@
 #!/bin/bash -x
 
+set -o errexit
+set -o pipefail
+set -o xtrace
+
 # Turn off SELinux
 setenforce 0
 
@@ -21,7 +25,7 @@ yum-config-manager --disable ol7_UEKR3
 yum-config-manager --enable ol7_addons ol7_latest ol7_UEKR4 ol7_optional ol7_optional_latest
 
 # Workaround for yum metadata checksum mismatch issue
-yum clean all; rm -rf /var/cache/yum; yum update -y
+#yum clean all; rm -rf /var/cache/yum; yum update -y
 
 # Install Docker
 until yum -y install docker-engine-${docker_ver}; do sleep 1 && echo -n "."; done
