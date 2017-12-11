@@ -43,6 +43,16 @@ resource "oci_core_security_list" "K8SWorkerSubnet" {
       protocol = "6"
       source   = "${var.default_node_port_ingress_cidr}"
     },
+    {
+      # External traffic
+      tcp_options {
+        "max" = 8200
+        "min" = 8200
+      }
+
+      protocol = "6"
+      source   = "${var.default_ssh_ingress_cidr}"
+    }
   ]
 
   provisioner "local-exec" {
