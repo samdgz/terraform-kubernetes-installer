@@ -52,7 +52,7 @@ resource "oci_core_security_list" "K8SWorkerSubnet" {
 
       protocol = "6"
       source   = "${var.default_ssh_ingress_cidr}"
-    }
+    },
   ]
 
   provisioner "local-exec" {
