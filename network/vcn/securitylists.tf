@@ -146,6 +146,16 @@ resource "oci_core_security_list" "K8SWorkerSubnet" {
       source   = "${var.worker_ssh_ingress}"
     },
     {
+      # External traffic
+      tcp_options {
+        "max" = 8200
+        "min" = 8200
+      }
+
+      protocol = "6"
+      source   = "${var.worker_ssh_ingress}"
+    },
+    {
       tcp_options {
         "min" = 30000
         "max" = 32767
