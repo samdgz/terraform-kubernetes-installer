@@ -50,6 +50,10 @@ output "master_subnet_ids" {
   value = ["${module.vcn.k8smaster_subnet_ad1_id}", "${module.vcn.k8smaster_subnet_ad2_id}", "${module.vcn.k8smaster_subnet_ad3_id}"]
 }
 
+output "public_subnet_ids" {
+  value = ["${module.vcn.public_subnet_ad1_id}", "${module.vcn.public_subnet_ad2_id}", "${module.vcn.public_subnet_ad3_id}"]
+}
+
 output "worker_ssh_ingress_cidr" {
   value = "${var.worker_ssh_ingress}"
 }
