@@ -1,5 +1,6 @@
 variable "compartment_ocid" {}
 variable "etcd_subnet_0_id" {}
+variable "etcd_subnet_1_id" {}
 
 variable "label_prefix" {
   default = ""
@@ -33,4 +34,8 @@ variable "etcd_ad3_private_ips" {
 
 variable "shape" {
   default = "100Mbs"
+}
+
+variable "is_private" {
+  default = "false"
 }
