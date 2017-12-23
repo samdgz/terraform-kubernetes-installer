@@ -15,15 +15,15 @@ output "master_lb_backendset_name" {
 }
 
 output "etcd_lb_id" {
-  value = "${module.etcd-private-lb.load_balancer_id}"
+  value = "${module.etcd-lb.load_balancer_id}"
 }
 
 output "etcd_lb_backendset_2379_name" {
-  value = "${module.etcd-private-lb.backendset_2379_name}"
+  value = "${module.etcd-lb.backendset_2379_name}"
 }
 
 output "etcd_lb_backendset_2380_name" {
-  value = "${module.etcd-private-lb.backendset_2380_name}"
+  value = "${module.etcd-lb.backendset_2380_name}"
 }
 
 output "vcn_id" {
@@ -103,7 +103,7 @@ output "ssh_public_key_openssh" {
 }
 
 output "etcd_lb_ip" {
-  value = ["${module.etcd-private-lb.ip_addresses}"]
+  value = ["${module.etcd-lb.ip_addresses}"]
 }
 
 output "etcd_public_ips" {
