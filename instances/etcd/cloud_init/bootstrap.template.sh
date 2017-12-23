@@ -3,15 +3,18 @@
 # Turn off SELinux
 setenforce 0
 
-# Set working dir
-cd /home/opc
-
 # enable ol7 addons
 yum-config-manager --disable ol7_UEKR3
 yum-config-manager --enable ol7_addons ol7_latest ol7_UEKR4 ol7_optional ol7_optional_latest
 
+# Workaround for yum metadata checksum mismatch issue
+yum clean all; rm -rf /var/cache/yum;
+
 # Install Docker
 until yum -y install docker-engine-${docker_ver}; do sleep 1 && echo -n "."; done
+
+# Set working dir
+cd /home/opc
 
 cat <<EOF > /etc/sysconfig/docker
 OPTIONS="--selinux-enabled --log-opt max-size=${docker_max_log_size} --log-opt max-file=${docker_max_log_files}"
