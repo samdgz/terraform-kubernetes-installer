@@ -115,6 +115,9 @@ EOF
 yum-config-manager --add-repo http://yum.kubernetes.io/repos/kubernetes-el7-x86_64
 until yum install -y kubelet-${k8s_ver}-$RPM_TAG kubectl-${k8s_ver}-$RPM_TAG kubernetes-cni; do sleep 1 && echo -n ".";done
 
+#install uuid for creating encryption key for etcd encryption provider
+until yum install -y uuid
+
 # Pull etcd docker image from registry
 docker pull quay.io/coreos/etcd:${etcd_ver}
 
