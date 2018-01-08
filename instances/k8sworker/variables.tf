@@ -25,19 +25,18 @@ variable "ssh_public_key_openssh" {}
 variable "ssh_private_key" {}
 
 variable "docker_ver" {
-  default = "docker-ce_17.03.0~ce-0~ubuntu-xenial_amd64"
+  default = "17.06.2.ol"
 }
 
-variable "instance_os_ver" {
-  default = "16.04"
+variable "oracle_linux_image_name" {
+  default = "Oracle-Linux-7.4-2017.10.25-0"
 }
-
-variable "etcd_lb" {}
 
 variable "etcd_ver" {
   default = "v3.2.2"
 }
 
+# TODO - because the bootstrap template uses yum, we only support Oracle Linux 7
 variable "flannel_ver" {
   default = "v0.7.1"
 }
@@ -56,5 +55,20 @@ variable "api_server_cert_pem" {}
 
 # etcd
 variable "etcd_discovery_url" {}
+variable "etcd_endpoints" {}
+
+variable "worker_docker_max_log_size" {
+  description = "Maximum size of the k8s worker docker container json logs"
+  default = "50m"
+}
+variable "worker_docker_max_log_files" {
+  description = "Maximum number of the k8s worker docker container json logs to rotate"
+  default = "5"
+}
+
+# Docker device
+variable "docker_device" {
+  default = ""
+}
 
 variable "image" {}

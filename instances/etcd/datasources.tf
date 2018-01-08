@@ -1,8 +1,7 @@
-# Cloud call to get the OCID of the OS image to use
+# Prevent oci_core_images image list from changing underneath us.
 data "oci_core_images" "ImageOCID" {
-  compartment_id           = "${var.compartment_ocid}"
-  operating_system         = "Canonical Ubuntu"
-  operating_system_version = "${var.instance_os_ver}"
+  compartment_id = "${var.compartment_ocid}"
+  display_name   = "${var.oracle_linux_image_name}"
 }
 
 # Cloud call to get a list of Availability Domains
@@ -21,6 +20,8 @@ data "template_file" "etcd-bootstrap" {
     flannel_network_cidr      = "${var.flannel_network_cidr}"
     flannel_network_subnetlen = "${var.flannel_network_subnetlen}"
     flannel_backend           = "${var.flannel_backend}"
+    docker_max_log_size       = "${var.etcd_docker_max_log_size}"
+    docker_max_log_files      = "${var.etcd_docker_max_log_files}"
     etcd_discovery_url        = "${file("${path.root}/generated/discovery${var.etcd_discovery_url}")}"
   }
 }

@@ -1,8 +1,7 @@
-# Gets the OCID of the OS image to use
+# Prevent oci_core_images image list from changing underneath us.
 data "oci_core_images" "ImageOCID" {
-  compartment_id           = "${var.compartment_ocid}"
-  operating_system         = "Canonical Ubuntu"
-  operating_system_version = "${var.instance_os_ver}"
+  compartment_id = "${var.compartment_ocid}"
+  display_name   = "${var.oracle_linux_image_name}"
 }
 
 # Cloud call to get a list of Availability Domains
@@ -19,8 +18,10 @@ data "template_file" "setup-template" {
     etcd_ver           = "${var.etcd_ver}"
     flannel_ver        = "${var.flannel_ver}"
     k8s_ver            = "${var.k8s_ver}"
-    etcd_lb            = "${var.etcd_lb}"
+    docker_max_log_size = "${var.master_docker_max_log_size}"
+    docker_max_log_files = "${var.master_docker_max_log_files}"
     etcd_discovery_url = "${file("${path.root}/generated/discovery${var.etcd_discovery_url}")}"
+    etcd_endpoints     = "${var.etcd_endpoints}"
   }
 }
 
@@ -45,9 +46,9 @@ data "template_file" "kube-apiserver" {
 
   vars = {
     api_server_count = "${var.api_server_count}"
-    etcd_lb          = "${var.etcd_lb}"
     domain_name      = "${var.domain_name}"
     k8s_ver          = "${var.k8s_ver}"
+    etcd_endpoints   = "${var.etcd_endpoints}"
   }
 }
 
@@ -104,10 +105,6 @@ data "template_file" "kube-rbac" {
   template = "${file("${path.module}/manifests/kube-rbac-role-binding.yaml")}"
 }
 
-data "template_file" "docker-service" {
-  template = "${file("${path.module}/scripts/docker.service")}"
-}
-
 data "template_file" "flannel-service" {
   template = "${file("${path.module}/scripts/flannel.service")}"
 }
@@ -148,7 +145,6 @@ data "template_file" "kube_master_cloud_init_file" {
     api-server-key-content                   = "${base64encode(var.api_server_private_key_pem)}"
     api-server-cert-content                  = "${base64encode(var.api_server_cert_pem)}"
     api-token_auth_template_content          = "${base64encode(data.template_file.token_auth_file.rendered)}"
-    docker_service_content                   = "${base64encode(data.template_file.docker-service.rendered)}"
     flannel_service_content                  = "${base64encode(data.template_file.flannel-service.rendered)}"
     cnibridge_service_content                = "${base64encode(data.template_file.cnibridge-service.rendered)}"
     cnibridge_sh_content                     = "${base64encode(data.template_file.cnibridge-sh.rendered)}"

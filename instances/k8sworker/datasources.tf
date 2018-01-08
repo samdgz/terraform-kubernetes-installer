@@ -1,8 +1,7 @@
-# Gets the OCID of the OS image to use
+# Prevent oci_core_images image list from changing underneath us.
 data "oci_core_images" "ImageOCID" {
-  compartment_id           = "${var.compartment_ocid}"
-  operating_system         = "Canonical Ubuntu"
-  operating_system_version = "${var.instance_os_ver}"
+  compartment_id = "${var.compartment_ocid}"
+  display_name   = "${var.oracle_linux_image_name}"
 }
 
 # Cloud call to get a list of Availability Domains
@@ -20,8 +19,11 @@ data "template_file" "setup-template" {
     etcd_ver           = "${var.etcd_ver}"
     flannel_ver        = "${var.flannel_ver}"
     k8s_ver            = "${var.k8s_ver}"
-    etcd_lb            = "${var.etcd_lb}"
+    docker_max_log_size  = "${var.worker_docker_max_log_size}"
+    docker_max_log_files = "${var.worker_docker_max_log_files}"
     etcd_discovery_url = "${file("${path.root}/generated/discovery${var.etcd_discovery_url}")}"
+    etcd_endpoints     = "${var.etcd_endpoints}"
+    docker_device      = "${var.docker_device}"
   }
 }
 
@@ -53,10 +55,6 @@ data "template_file" "worker-kubeconfig" {
   }
 }
 
-data "template_file" "docker-service" {
-  template = "${file("${path.module}/scripts/docker.service")}"
-}
-
 data "template_file" "flannel-service" {
   template = "${file("${path.module}/scripts/flannel.service")}"
 }
@@ -76,8 +74,8 @@ data "template_file" "kubelet-service" {
     master_lb   = "${var.master_lb}"
     k8s_ver     = "${var.k8s_ver}"
     domain_name = "${var.domain_name}"
-    region      = "${lower(var.region)}"
-    zone        = "${lower(replace(var.availability_domain,":","-"))}"
+    region      = "${var.region}"
+    zone        = "${element(split(":",var.availability_domain),1)}"
   }
 }
 
@@ -90,7 +88,6 @@ data "template_file" "kube_worker_cloud_init_file" {
     setup_template_sh_content          = "${base64encode(data.template_file.setup-template.rendered)}"
     kube_proxy_template_content        = "${base64encode(data.template_file.kube-proxy.rendered)}"
     worker_kubeconfig_template_content = "${base64encode(data.template_file.worker-kubeconfig.rendered)}"
-    docker_service_content             = "${base64encode(data.template_file.docker-service.rendered)}"
     flannel_service_content            = "${base64encode(data.template_file.flannel-service.rendered)}"
     cnibridge_service_content          = "${base64encode(data.template_file.cnibridge-service.rendered)}"
     cnibridge_sh_content               = "${base64encode(data.template_file.cnibridge-sh.rendered)}"

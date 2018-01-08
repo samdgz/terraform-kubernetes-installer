@@ -16,11 +16,11 @@ variable "label_prefix" {
 }
 
 variable "docker_ver" {
-  default = "docker-ce_17.03.0~ce-0~ubuntu-xenial_amd64"
+  default = "17.06.2.ol"
 }
 
-variable "instance_os_ver" {
-  default = "16.04"
+variable "oracle_linux_image_name" {
+  default = "Oracle-Linux-7.4-2017.10.25-0"
 }
 
 variable "etcd_ver" {
@@ -28,13 +28,27 @@ variable "etcd_ver" {
 }
 
 variable "tenancy_ocid" {}
-variable flannel_network_cidr {}
-variable flannel_network_subnetlen {}
-variable flannel_backend {}
+variable "flannel_network_cidr" {}
+variable "flannel_network_subnetlen" {}
+variable "flannel_backend" {}
 variable "etcd_discovery_url" {}
 
 variable "count" {
   default = "1"
 }
 
-variable "image" {}
+variable "etcd_docker_max_log_size" {
+  description = "Maximum size of the etcd docker container json logs"
+  default = "50m"
+}
+variable "etcd_docker_max_log_files" {
+  description = "Maximum number of etcd docker container json logs to rotate"
+  default = "5"
+}
+
+variable "oci_core_image" {
+  default = "ocid1.image.oc1.iad.aaaaaaaahqfv2inssrwfu6arffox3zubxm4swql4hht6t5fk4m5ilfzomgda"
+}
+
+variable "image" {
+}
