@@ -29,7 +29,7 @@ variable "docker_ver" {
 }
 
 variable "oracle_linux_image_name" {
-  default = "Oracle-Linux-7.4-2017.10.25-0"
+  default = "Oracle-Linux-7.4-2018.01.10-0"
 }
 
 variable "etcd_ver" {
@@ -45,7 +45,7 @@ variable "flannel_ver" {
 variable "master_lb" {}
 
 variable "k8s_ver" {
-  default = "1.7.4"
+  default = "1.7.10"
 }
 
 variable "root_ca_pem" {}
@@ -66,9 +66,20 @@ variable "worker_docker_max_log_files" {
   default = "5"
 }
 
-# Docker device
-variable "docker_device" {
-  default = ""
+# iSCSI
+variable "worker_iscsi_volume_create" {
+  description = "Bool if an iscsi volume should be attached and mounted at /var/lib/docker"
+  default = false
+}
+
+variable "worker_iscsi_volume_size" {
+  description = "Size of iscsi volume to be created"
+  default = 50
+}
+
+variable "worker_iscsi_volume_mount" {
+  description = "Mount point of iscsi volume"
+  default = "/var/lib/docker"
 }
 
 variable "image" {}

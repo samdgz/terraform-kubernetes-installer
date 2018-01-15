@@ -20,7 +20,7 @@ variable "docker_ver" {
 }
 
 variable "oracle_linux_image_name" {
-  default = "Oracle-Linux-7.4-2017.10.25-0"
+  default = "Oracle-Linux-7.4-2018.01.10-0"
 }
 
 variable "etcd_ver" {
@@ -44,6 +44,17 @@ variable "etcd_docker_max_log_size" {
 variable "etcd_docker_max_log_files" {
   description = "Maximum number of etcd docker container json logs to rotate"
   default = "5"
+}
+
+# iSCSI
+variable "etcd_iscsi_volume_create" {
+  description = "Bool if an iscsi volume should be attached and mounted at the etcd volume mount point /etcd"
+  default = false
+}
+
+variable "etcd_iscsi_volume_size" {
+  description = "Size of iscsi volume to be created"
+  default = 50
 }
 
 variable "oci_core_image" {

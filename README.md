@@ -6,6 +6,8 @@
 
 # Terraform Kubernetes Installer for Oracle Cloud Infrastructure
 
+[![wercker status](https://app.wercker.com/status/7dd9fa20b980673dc0e252961950f590/s/master "wercker status")](https://app.wercker.com/project/byKey/7dd9fa20b980673dc0e252961950f590)
+
 ## About
 
 The Kubernetes Installer for Oracle Cloud Infrastructure provides a Terraform-based Kubernetes installation for Oracle 
@@ -136,10 +138,31 @@ kubernetes-dashboard is running at https://129.146.22.175:443/ui
 
 Check out the [example operations](./docs/examples.md) for details on how to use Terraform to scale, upgrade, replace, or delete your cluster.
 
+### Worker iSCSI Volume attachment
+
+If you'd like to have a iSCSI volume created and attached to each worker then simply set the two variables below:
+
+```worker_iscsi_volume_create = true
+worker_iscsi_volume_size = 100
+```
+
+By default, the volume will be mounted at `/var/lib/docker`. If you would like to override the default mount path, set the `worker_iscsi_volume_mount`
+
+```
+worker_iscsi_volume_mount  = "/mymountpoint"
+```
+
 ## Known issues and limitations
 * Scaling or replacing etcd members in or out after the initial deployment is currently unsupported
 * Creating a service with `--type=LoadBalancer` is currently unsupported
 * Failover or HA configuration for NAT instance(s) is currently unsupported
+* Resizing the iSCSI volume will delete and recreate the volume.
+
+## Testing
+
+Tests run _automatically_ on every commit to the main branch. Additionally, the tests should be run against any pull-request before it is merged.
+
+See [Testing](tests/README.md) for details.
 
 ## Contributing
 

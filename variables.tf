@@ -265,7 +265,7 @@ variable "flannel_ver" {
 }
 
 variable "k8s_ver" {
-  default = "1.7.4"
+  default = "1.7.10"
 }
 
 variable "k8s_dashboard_ver" {
@@ -276,8 +276,20 @@ variable "k8s_dns_ver" {
   default = "1.14.2"
 }
 
-variable "oracle_linux_image_name" {
-  default = "Oracle-Linux-7.4-2017.10.25-0"
+variable "master_ol_image_name" {
+  default = "Oracle-Linux-7.4-2018.01.10-0"
+}
+
+variable "worker_ol_image_name" {
+  default = "Oracle-Linux-7.4-2018.01.10-0"
+}
+
+variable "etcd_ol_image_name" {
+  default = "Oracle-Linux-7.4-2018.01.10-0"
+}
+
+variable "nat_ol_image_name" {
+  default = "Oracle-Linux-7.4-2018.01.10-0"
 }
 
 variable "control_plane_subnet_access" {
@@ -310,8 +322,30 @@ variable nat_instance_ad3_enabled {
   default     = "false"
 }
 
-variable "worker_docker_device" {
-  default = ""
+# iSCSI
+variable "worker_iscsi_volume_create" {
+  description = "Bool if an iscsi volume should be attached and mounted at /var/lib/docker"
+  default = false
+}
+
+variable "worker_iscsi_volume_size" {
+  description = "Size of iscsi volume to be created"
+  default = 50
+}
+
+variable "worker_iscsi_volume_mount" {
+  description = "Mount point of iscsi volume"
+  default = "/var/lib/docker"
+}
+
+variable "etcd_iscsi_volume_create" {
+  description = "Bool if an iscsi volume should be attached and mounted at the etcd volume mount point /etcd"
+  default = false
+}
+
+variable "etcd_iscsi_volume_size" {
+  description = "Size of iscsi volume to be created"
+  default = 50
 }
 
 variable "oci_core_image" {

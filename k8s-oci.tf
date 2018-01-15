@@ -32,7 +32,7 @@ module "vcn" {
   public_subnet_ssh_ingress               = "${var.public_subnet_ssh_ingress}"
   public_subnet_http_ingress              = "${var.public_subnet_http_ingress}"
   public_subnet_https_ingress             = "${var.public_subnet_https_ingress}"
-  nat_instance_oracle_linux_image_name    = "${var.oracle_linux_image_name}"
+  nat_instance_oracle_linux_image_name    = "${var.nat_ol_image_name}"
   nat_instance_shape                      = "${var.natInstanceShape}"
   nat_instance_ad1_enabled                = "${var.nat_instance_ad1_enabled}"
   nat_instance_ad2_enabled                = "${var.nat_instance_ad2_enabled}"
@@ -56,7 +56,7 @@ module "instances-etcd-ad1" {
   flannel_network_cidr      = "10.99.0.0/16"
   flannel_network_subnetlen = 24
   hostname_label            = "etcd-ad1"
-  oracle_linux_image_name   = "${var.oracle_linux_image_name}"
+  oracle_linux_image_name   = "${var.etcd_ol_image_name}"
   label_prefix              = "${var.label_prefix}"
   image                     = "${var.oci_core_image}"
   shape                     = "${var.etcdShape}"
@@ -65,6 +65,8 @@ module "instances-etcd-ad1" {
   tenancy_ocid              = "${var.compartment_ocid}"
   etcd_docker_max_log_size  = "${var.etcd_docker_max_log_size}"
   etcd_docker_max_log_files = "${var.etcd_docker_max_log_files}"
+  etcd_iscsi_volume_create  = "${var.etcd_iscsi_volume_create}"
+  etcd_iscsi_volume_size    = "${var.etcd_iscsi_volume_size}"
 }
 
 module "instances-etcd-ad2" {
@@ -79,7 +81,7 @@ module "instances-etcd-ad2" {
   flannel_network_cidr      = "10.99.0.0/16"
   flannel_network_subnetlen = 24
   hostname_label            = "etcd-ad2"
-  oracle_linux_image_name   = "${var.oracle_linux_image_name}"
+  oracle_linux_image_name   = "${var.etcd_ol_image_name}"
   label_prefix              = "${var.label_prefix}"
   image                     = "${var.oci_core_image}"
   shape                     = "${var.etcdShape}"
@@ -88,6 +90,9 @@ module "instances-etcd-ad2" {
   tenancy_ocid              = "${var.compartment_ocid}"
   etcd_docker_max_log_size  = "${var.etcd_docker_max_log_size}"
   etcd_docker_max_log_files = "${var.etcd_docker_max_log_files}"
+  etcd_iscsi_volume_create  = "${var.etcd_iscsi_volume_create}"
+  etcd_iscsi_volume_size    = "${var.etcd_iscsi_volume_size}"
+
 }
 
 module "instances-etcd-ad3" {
@@ -104,7 +109,7 @@ module "instances-etcd-ad3" {
   flannel_network_cidr      = "10.99.0.0/16"
   flannel_network_subnetlen = 24
   hostname_label            = "etcd-ad3"
-  oracle_linux_image_name   = "${var.oracle_linux_image_name}"
+  oracle_linux_image_name   = "${var.etcd_ol_image_name}"
   label_prefix              = "${var.label_prefix}"
   image                     = "${var.oci_core_image}"
   shape                     = "${var.etcdShape}"
@@ -113,6 +118,8 @@ module "instances-etcd-ad3" {
   tenancy_ocid              = "${var.compartment_ocid}"
   etcd_docker_max_log_size  = "${var.etcd_docker_max_log_size}"
   etcd_docker_max_log_files = "${var.etcd_docker_max_log_files}"
+  etcd_iscsi_volume_create  = "${var.etcd_iscsi_volume_create}"
+  etcd_iscsi_volume_size    = "${var.etcd_iscsi_volume_size}"
 }
 
 module "instances-k8smaster-ad1" {
@@ -133,7 +140,7 @@ module "instances-k8smaster-ad1" {
   etcd_ver                   = "${var.etcd_ver}"
   flannel_ver                = "${var.flannel_ver}"
   hostname_label_prefix      = "k8s-master-ad1"
-  oracle_linux_image_name    = "${var.oracle_linux_image_name}"
+  oracle_linux_image_name    = "${var.master_ol_image_name}"
   k8s_dashboard_ver          = "${var.k8s_dashboard_ver}"
   k8s_dns_ver                = "${var.k8s_dns_ver}"
   k8s_ver                    = "${var.k8s_ver}"
@@ -171,7 +178,7 @@ module "instances-k8smaster-ad2" {
   etcd_ver                   = "${var.etcd_ver}"
   flannel_ver                = "${var.flannel_ver}"
   hostname_label_prefix      = "k8s-master-ad2"
-  oracle_linux_image_name    = "${var.oracle_linux_image_name}"
+  oracle_linux_image_name    = "${var.master_ol_image_name}"
   k8s_dashboard_ver          = "${var.k8s_dashboard_ver}"
   k8s_dns_ver                = "${var.k8s_dns_ver}"
   k8s_ver                    = "${var.k8s_ver}"
@@ -209,7 +216,7 @@ module "instances-k8smaster-ad3" {
   etcd_ver                   = "${var.etcd_ver}"
   flannel_ver                = "${var.flannel_ver}"
   hostname_label_prefix      = "k8s-master-ad3"
-  oracle_linux_image_name    = "${var.oracle_linux_image_name}"
+  oracle_linux_image_name    = "${var.master_ol_image_name}"
   k8s_dashboard_ver          = "${var.k8s_dashboard_ver}"
   k8s_dns_ver                = "${var.k8s_dns_ver}"
   k8s_ver                    = "${var.k8s_ver}"
@@ -245,7 +252,7 @@ module "instances-k8sworker-ad1" {
   etcd_ver                   = "${var.etcd_ver}"
   flannel_ver                = "${var.flannel_ver}"
   hostname_label_prefix      = "k8s-worker-ad1"
-  oracle_linux_image_name    = "${var.oracle_linux_image_name}"
+  oracle_linux_image_name    = "${var.worker_ol_image_name}"
   k8s_ver                    = "${var.k8s_ver}"
   label_prefix               = "${var.label_prefix}"
   master_lb                  = "https://${module.k8smaster-public-lb.ip_addresses[0]}:443"
@@ -265,7 +272,9 @@ module "instances-k8sworker-ad1" {
                                                               module.instances-etcd-ad1.private_ips,
                                                               module.instances-etcd-ad2.private_ips,
                                                               module.instances-etcd-ad3.private_ips)))) }"
-  docker_device              = "${var.worker_docker_device}"
+  worker_iscsi_volume_create = "${var.worker_iscsi_volume_create}"
+  worker_iscsi_volume_size   = "${var.worker_iscsi_volume_size}"
+  worker_iscsi_volume_mount  = "${var.worker_iscsi_volume_mount}"
 }
 
 module "instances-k8sworker-ad2" {
@@ -284,7 +293,7 @@ module "instances-k8sworker-ad2" {
   etcd_ver                   = "${var.etcd_ver}"
   flannel_ver                = "${var.flannel_ver}"
   hostname_label_prefix      = "k8s-worker-ad2"
-  oracle_linux_image_name    = "${var.oracle_linux_image_name}"
+  oracle_linux_image_name    = "${var.worker_ol_image_name}"
   k8s_ver                    = "${var.k8s_ver}"
   label_prefix               = "${var.label_prefix}"
   master_lb                  = "https://${module.k8smaster-public-lb.ip_addresses[0]}:443"
@@ -304,7 +313,9 @@ module "instances-k8sworker-ad2" {
                                                               module.instances-etcd-ad1.private_ips,
                                                               module.instances-etcd-ad2.private_ips,
                                                               module.instances-etcd-ad3.private_ips)))) }"
-  docker_device              = "${var.worker_docker_device}"
+  worker_iscsi_volume_create = "${var.worker_iscsi_volume_create}"
+  worker_iscsi_volume_size   = "${var.worker_iscsi_volume_size}"
+  worker_iscsi_volume_mount  = "${var.worker_iscsi_volume_mount}"
 }
 
 module "instances-k8sworker-ad3" {
@@ -323,7 +334,7 @@ module "instances-k8sworker-ad3" {
   etcd_ver                   = "${var.etcd_ver}"
   flannel_ver                = "${var.flannel_ver}"
   hostname_label_prefix      = "k8s-worker-ad3"
-  oracle_linux_image_name    = "${var.oracle_linux_image_name}"
+  oracle_linux_image_name    = "${var.worker_ol_image_name}"
   k8s_ver                    = "${var.k8s_ver}"
   label_prefix               = "${var.label_prefix}"
   master_lb                  = "https://${module.k8smaster-public-lb.ip_addresses[0]}:443"
@@ -343,7 +354,9 @@ module "instances-k8sworker-ad3" {
                                                               module.instances-etcd-ad1.private_ips,
                                                               module.instances-etcd-ad2.private_ips,
                                                               module.instances-etcd-ad3.private_ips)))) }"
-  docker_device              = "${var.worker_docker_device}"
+  worker_iscsi_volume_create = "${var.worker_iscsi_volume_create}"
+  worker_iscsi_volume_size   = "${var.worker_iscsi_volume_size}"
+  worker_iscsi_volume_mount  = "${var.worker_iscsi_volume_mount}"
 }
 
 ### Load Balancers

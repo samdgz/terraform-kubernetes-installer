@@ -29,14 +29,6 @@ else
     SWAP_OPTION="--fail-swap-on=false"
 fi
 
-## k8s_ver RPM Tag option
-######################################
-if [[ $k8sversion =~ ^[1]+\.[7]+\.[6-8] ]]; then
-    RPM_TAG=1
-else
-    RPM_TAG=0
-fi
-
 ## etcd
 ######################################
 
@@ -65,17 +57,41 @@ cp /root/services/cni-bridge.service /etc/systemd/system/cni-bridge.service
 cp /root/services/cni-bridge.sh /usr/local/bin/cni-bridge.sh && chmod +x /usr/local/bin/cni-bridge.sh
 systemctl enable cni-bridge && systemctl start cni-bridge
 
-## Docker
+## Setup NVMe drives and mount at /var/lib/docker
 ######################################
-if [ -n "${docker_device}" ]; then
-  if [ -e "${docker_device}" ]; then
-    mkfs -t xfs -L DOCKER ${docker_device}
-    mkdir -p /var/lib/docker
-    cat <<-EOF >>/etc/fstab
-	LABEL=DOCKER /var/lib/docker  xfs     defaults 0 0
-	EOF
-    mount /var/lib/docker
-  fi
+NVMEVGNAME="NVMeVG"
+NVMELVNAME="DockerVol"
+NVMEDEVS=$(lsblk -I259 -pn -oNAME -d)
+if [[ ! -z "$${NVMEDEVS}" ]]; then
+    lvs $${NVMEVGNAME}/$${NVMELVNAME} --noheadings --logonly 1>/dev/null
+    if [ $$? -ne 0 ]; then
+	pvcreate $${NVMEDEVS}
+	vgcreate $${NVMEVGNAME} $${NVMEDEVS}
+	lvcreate --extents 100%FREE --name $${NVMELVNAME} $${NVMEVGNAME} $${NVMEDEVS}
+	mkfs -t xfs /dev/$${NVMEVGNAME}/$${NVMELVNAME}
+	mkdir -p /var/lib/docker
+	mount -t xfs /dev/$${NVMEVGNAME}/$${NVMELVNAME} /var/lib/docker
+	echo "/dev/$${NVMEVGNAME}/$${NVMELVNAME} /var/lib/docker xfs rw,relatime,seclabel,attr2,inode64,noquota 0 2" >> /etc/fstab
+    fi
+fi
+
+## Login iSCSI volume mount and create filesystem
+######################################
+iqn=$(iscsiadm --mode discoverydb --type sendtargets --portal 169.254.2.2:3260 --discover| cut -f2 -d" ")
+
+if [ -n "$${iqn}" ]; then
+    echo "iSCSI Login $${iqn}"
+    iscsiadm -m node -o new -T $${iqn} -p 169.254.2.2:3260
+    iscsiadm -m node -o update -T $${iqn} -n node.startup -v automatic
+    iscsiadm -m node -T $${iqn} -p 169.254.2.2:3260 -l
+    # Wait for device to apear...
+    until [[ -e "/dev/disk/by-path/ip-169.254.2.2:3260-iscsi-$${iqn}-lun-1" ]]; do sleep 1 && echo -n "."; done
+    # If the volume has been created and formatted before but it's just a new instance this may fail
+    # but if so ignore and carry on.
+    mkfs -t xfs "/dev/disk/by-path/ip-169.254.2.2:3260-iscsi-$${iqn}-lun-1";
+    echo "$$(readlink -f /dev/disk/by-path/ip-169.254.2.2:3260-iscsi-$${iqn}-lun-1) ${worker_iscsi_volume_mount} xfs defaults,noatime,_netdev 0 2" >> /etc/fstab
+    mkdir -p ${worker_iscsi_volume_mount}
+    mount -t xfs "/dev/disk/by-path/ip-169.254.2.2:3260-iscsi-$${iqn}-lun-1" ${worker_iscsi_volume_mount}
 fi
 
 until yum -y install docker-engine-${docker_ver}; do sleep 1 && echo -n "."; done
@@ -118,6 +134,7 @@ EOF
 
 # Disable SELinux and firewall
 setenforce 0
+sudo sed -i  s/SELINUX=enforcing/SELINUX=permissive/ /etc/selinux/config
 systemctl stop firewalld.service
 systemctl disable firewalld.service
 
@@ -136,7 +153,32 @@ EOF
 ## Install kubelet, kubectl, and kubernetes-cni
 ###############################################
 yum-config-manager --add-repo http://yum.kubernetes.io/repos/kubernetes-el7-x86_64
-until yum install -y kubelet-${k8s_ver}-$RPM_TAG kubectl-${k8s_ver}-$RPM_TAG kubernetes-cni; do sleep 1 && echo -n ".";done
+yum search -y kubernetes
+
+VER_IN_REPO=$(repoquery --nvr --show-duplicates kubelet | sort --version-sort | grep ${k8s_ver} | tail -n 1)
+if [[ -z "$${VER_IN_REPO}" ]]; then
+   MAJOR_VER=$(echo ${k8s_ver} | cut -d. -f-2)
+   echo "Falling back to latest version available in: $MAJOR_VER"
+   VER_IN_REPO=$(repoquery --nvr --show-duplicates kubelet | sort --version-sort | grep $MAJOR_VER | tail -n 1)
+   echo "Installing kubelet version: $VER_IN_REPO"
+   yum install -y $VER_IN_REPO
+   ## Replace kubelet binary since rpm at the exact k8s_ver was not available.
+   curl -L --retry 3 http://storage.googleapis.com/kubernetes-release/release/v${k8s_ver}/bin/linux/amd64/kubelet -o /bin/kubelet && chmod 755 /bin/kubelet
+else
+   echo "Installing kubelet version: $VER_IN_REPO"
+   yum install -y $VER_IN_REPO
+fi
+
+# Check if kubernetes-cni was automatically installed as a dependency
+K8S_CNI=$(rpm -qa | grep kubernetes-cni)
+if [[ -z "$${K8S_CNI}" ]]; then
+   echo "Installing: $K8S_CNI"
+   yum install -y kubernetes-cni
+else
+   echo "$K8S_CNI already installed"
+fi
+
+curl -L --retry 3 http://storage.googleapis.com/kubernetes-release/release/v${k8s_ver}/bin/linux/amd64/kubectl -o /bin/kubectl && chmod 755 /bin/kubectl
 
 ## Pull etcd docker image from registry
 docker pull quay.io/coreos/etcd:${etcd_ver}
