@@ -33,6 +33,7 @@ spec:
     - --kubelet-client-certificate=/etc/kubernetes/ssl/apiserver.pem
     - --kubelet-client-key=/etc/kubernetes/ssl/apiserver-key.pem
     - --token-auth-file=/etc/kubernetes/ssl/token_auth.csv
+    - --experimental-encryption-provider-config=/etc/kubernetes/manifests/encryption-provider-config.yaml
     ports:
     - containerPort: 443
       hostPort: 443
@@ -41,6 +42,9 @@ spec:
       hostPort: 8080
       name: local
     volumeMounts:
+    - mountPath: /etc/kubernetes/manifests
+      name: manifests-kubernetes
+      readOnly: true
     - mountPath: /etc/kubernetes/auth
       name: auth-kubernetes
       readOnly: true
@@ -54,6 +58,9 @@ spec:
       name: apiserver-logs
       readOnly: false
   volumes:
+  - hostPath:
+      path: /etc/kubernetes/manifests
+    name: manifests-kubernetes
   - hostPath:
       path: /etc/kubernetes/auth
     name: auth-kubernetes
