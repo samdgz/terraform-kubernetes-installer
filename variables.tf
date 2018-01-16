@@ -357,4 +357,6 @@ variable "flannel_backend" {
   description = "Flannel backend - possible choices are vxlan, udp, and host-gw"
   default = "VXLAN"
 }
+variable "oci_core_image" {
+}
 
