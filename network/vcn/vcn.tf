@@ -71,11 +71,3 @@ resource "oci_core_route_table" "NATInstanceAD3RouteTable" {
     network_entity_id = "${data.oci_core_private_ips.NATInstanceAD3PrivateIPDatasource.private_ips.0.id}"
   }
 }
-
-output "route_for_complete_id" {
-  value = "${oci_core_route_table.PublicRouteTable.id}"
-}
-
-output "dhcp_options_id" {
-  value = "${oci_core_virtual_network.CompleteVCN.default_dhcp_options_id}"
-}
