@@ -133,6 +133,9 @@ fi
 
 curl -L --retry 3 http://storage.googleapis.com/kubernetes-release/release/v${k8s_ver}/bin/linux/amd64/kubectl -o /bin/kubectl && chmod 755 /bin/kubectl
 
+#install uuid for creating encryption key for etcd encryption provider
+yum install -y uuid
+
 # Pull etcd docker image from registry
 docker pull quay.io/coreos/etcd:${etcd_ver}
 
