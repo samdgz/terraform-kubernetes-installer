@@ -4,7 +4,7 @@ resources:
   - resources:
     - secrets
     providers:
-    - aesgcm:
+    - aescbc:
         keys:
         - name: key1
           secret: ${encryption_secret}
