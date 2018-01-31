@@ -37,9 +37,11 @@ variable "flannel_ver" {
   default = "v0.7.1"
 }
 
+variable "ssh_private_key" {}
+
 # Kubernetes
 variable "k8s_ver" {
-  default = "1.7.10"
+  default = "1.7.9"
 }
 
 variable "k8s_dashboard_ver" {
@@ -75,3 +77,9 @@ variable "master_docker_max_log_files" {
 }
 
 variable "image" {}
+
+variable "cloud_controller_secret" {}
+
+variable "flexvolume_driver_secret" {}
+
+variable "volume_provisioner_secret" {}

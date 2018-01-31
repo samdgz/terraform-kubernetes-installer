@@ -4,6 +4,9 @@ EXTERNAL_IP=$(curl -s -m 10 http://whatismyip.akamai.com/)
 NAMESPACE=$(echo -n "${domain_name}" | sed "s/\.oraclevcn\.com//g")
 FQDN_HOSTNAME=$(getent hosts $(ip route get 1 | awk '{print $NF;exit}') | awk '{print $2}')
 
+# Pull instance metadata
+curl -sL --retry 3 http://169.254.169.254/opc/v1/instance/ | tee /tmp/instance_meta.json
+
 ETCD_ENDPOINTS=${etcd_endpoints}
 export HOSTNAME=$(hostname)
 
@@ -23,6 +26,14 @@ fi
 
 ## etcd
 ######################################
+
+## Disable TX checksum offloading so we don't break VXLAN
+######################################
+BROADCOM_DRIVER=$(lsmod | grep bnxt_en | awk '{print $1}')
+if [[ -n "$${BROADCOM_DRIVER}" ]]; then
+   echo "Disabling hardware TX checksum offloading"
+   ethtool --offload $(ip -o -4 route show to default | awk '{print $5}') tx off
+fi
 
 # Download etcdctl client
 curl -L --retry 3 https://github.com/coreos/etcd/releases/download/${etcd_ver}/etcd-${etcd_ver}-linux-amd64.tar.gz -o /tmp/etcd-${etcd_ver}-linux-amd64.tar.gz
@@ -103,6 +114,13 @@ cat >/etc/cni/net.d/10-flannel.conf <<EOF
 }
 EOF
 
+## Install Flex Volume Driver for OCI
+#####################################
+mkdir -p /usr/libexec/kubernetes/kubelet-plugins/volume/exec/oracle~oci/
+curl -L --retry 3 https://github.com/oracle/oci-flexvolume-driver/releases/download/0.2.0/oci -o/usr/libexec/kubernetes/kubelet-plugins/volume/exec/oracle~oci/oci
+chmod a+x /usr/libexec/kubernetes/kubelet-plugins/volume/exec/oracle~oci/oci
+mv /root/flexvolume-driver-secret.yaml /usr/libexec/kubernetes/kubelet-plugins/volume/exec/oracle~oci/config.yaml
+
 ## Install kubelet, kubectl, and kubernetes-cni
 ###############################################
 yum-config-manager --add-repo http://yum.kubernetes.io/repos/kubernetes-el7-x86_64
@@ -152,8 +170,11 @@ docker run -d \
 
 ## kubelet for the master
 systemctl daemon-reload
+read NODE_ID_0 NODE_ID_1 <<< $(jq -r '.id' /tmp/instance_meta.json | perl -pe 's/(.*?\.){4}\K/ /g' | perl -pe 's/\.+\s/ /g')
 sed -e "s/__FQDN_HOSTNAME__/$FQDN_HOSTNAME/g" \
     -e "s/__SWAP_OPTION__/$SWAP_OPTION/g" \
+    -e "s/__NODE_ID_PREFIX__/$NODE_ID_0/g" \
+    -e "s/__NODE_ID_SUFFIX__/$NODE_ID_1/g" \
      /root/services/kubelet.service >/etc/systemd/system/kubelet.service
 systemctl daemon-reload
 systemctl enable kubelet
@@ -168,10 +189,27 @@ until [ "$(curl localhost:8080/healthz 2>/dev/null)" == "ok" ]; do
 	sleep 3
 done
 
+# Install oci cloud controller manager
+kubectl apply -f /root/cloud-controller-secret.yaml
+kubectl apply -f https://raw.githubusercontent.com/oracle/oci-cloud-controller-manager/master/manifests/oci-cloud-controller-manager-rbac.yaml
+kubectl apply -f https://raw.githubusercontent.com/oracle/oci-cloud-controller-manager/master/manifests/oci-cloud-controller-manager.yaml
+
 ## install kube-dns
 kubectl create -f /root/services/kube-dns.yaml
 
 ## install kubernetes-dashboard
 kubectl create -f /root/services/kubernetes-dashboard.yaml
+
+## Install Volume Provisioner of OCI
+kubectl create secret generic oci-volume-provisioner -n kube-system --from-file=config.yaml=/root/volume-provisioner-secret.yaml
+kubectl apply -f https://raw.githubusercontent.com/oracle/oci-volume-provisioner/master/manifests/oci-volume-provisioner-rbac.yaml
+kubectl apply -f https://raw.githubusercontent.com/oracle/oci-volume-provisioner/master/manifests/oci-volume-provisioner.yaml
+kubectl apply -f https://raw.githubusercontent.com/oracle/oci-volume-provisioner/master/manifests/storage-class.yaml
+kubectl apply -f https://raw.githubusercontent.com/oracle/oci-volume-provisioner/master/manifests/storage-class-ext3.yaml
+
+## Mark OCI StorageClass as the default
+kubectl patch storageclass oci -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+
+rm -f /root/volume-provisioner-secret.yaml
 
 echo "Finished running setup.sh"

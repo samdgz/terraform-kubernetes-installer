@@ -105,6 +105,10 @@ data "template_file" "kube-rbac" {
   template = "${file("${path.module}/manifests/kube-rbac-role-binding.yaml")}"
 }
 
+data "template_file" "master-kubeconfig" {
+  template = "${file("${path.module}/manifests/master-kubeconfig.template.yaml")}"
+}
+
 data "template_file" "flannel-service" {
   template = "${file("${path.module}/scripts/flannel.service")}"
 }
@@ -130,24 +134,27 @@ data "template_file" "kube_master_cloud_init_file" {
 
   vars = {
     k8s_ver                                  = "${var.k8s_ver}"
-    setup_preflight_sh_content               = "${base64encode(data.template_file.setup-preflight.rendered)}"
-    setup_template_sh_content                = "${base64encode(data.template_file.setup-template.rendered)}"
-    kube_apiserver_template_content          = "${base64encode(data.template_file.kube-apiserver.rendered)}"
-    etcd_encryption_template_content          = "${base64encode(data.template_file.etcd-encryption.rendered)}"
-    kube_controller_manager_template_content = "${base64encode(data.template_file.kube-controller-manager.rendered)}"
-    kube_dns_template_content                = "${base64encode(data.template_file.kube-dns.rendered)}"
-    kube_proxy_template_content              = "${base64encode(data.template_file.kube-proxy.rendered)}"
-    kube_dashboard_template_content          = "${base64encode(data.template_file.kube-dashboard.rendered)}"
-    kube_rbac_content                        = "${base64encode(data.template_file.kube-rbac.rendered)}"
-    kube_scheduler_template_content          = "${base64encode(data.template_file.kube-scheduler.rendered)}"
-    kubelet_service_content                  = "${base64encode(data.template_file.kubelet-service.rendered)}"
-    ca-pem-content                           = "${base64encode(var.root_ca_pem)}"
-    api-server-key-content                   = "${base64encode(var.api_server_private_key_pem)}"
-    api-server-cert-content                  = "${base64encode(var.api_server_cert_pem)}"
-    api-token_auth_template_content          = "${base64encode(data.template_file.token_auth_file.rendered)}"
-    flannel_service_content                  = "${base64encode(data.template_file.flannel-service.rendered)}"
-    cnibridge_service_content                = "${base64encode(data.template_file.cnibridge-service.rendered)}"
-    cnibridge_sh_content                     = "${base64encode(data.template_file.cnibridge-sh.rendered)}"
+    setup_preflight_sh_content               = "${base64gzip(data.template_file.setup-preflight.rendered)}"
+    setup_template_sh_content                = "${base64gzip(data.template_file.setup-template.rendered)}"
+    kube_apiserver_template_content          = "${base64gzip(data.template_file.kube-apiserver.rendered)}"
+    kube_controller_manager_template_content = "${base64gzip(data.template_file.kube-controller-manager.rendered)}"
+    kube_dns_template_content                = "${base64gzip(data.template_file.kube-dns.rendered)}"
+    kube_proxy_template_content              = "${base64gzip(data.template_file.kube-proxy.rendered)}"
+    kube_dashboard_template_content          = "${base64gzip(data.template_file.kube-dashboard.rendered)}"
+    kube_rbac_content                        = "${base64gzip(data.template_file.kube-rbac.rendered)}"
+    master_kubeconfig_template_content       = "${base64gzip(data.template_file.master-kubeconfig.rendered)}"
+    kube_scheduler_template_content          = "${base64gzip(data.template_file.kube-scheduler.rendered)}"
+    kubelet_service_content                  = "${base64gzip(data.template_file.kubelet-service.rendered)}"
+    ca-pem-content                           = "${base64gzip(var.root_ca_pem)}"
+    api-server-key-content                   = "${base64gzip(var.api_server_private_key_pem)}"
+    api-server-cert-content                  = "${base64gzip(var.api_server_cert_pem)}"
+    api-token_auth_template_content          = "${base64gzip(data.template_file.token_auth_file.rendered)}"
+    flannel_service_content                  = "${base64gzip(data.template_file.flannel-service.rendered)}"
+    cnibridge_service_content                = "${base64gzip(data.template_file.cnibridge-service.rendered)}"
+    cnibridge_sh_content                     = "${base64gzip(data.template_file.cnibridge-sh.rendered)}"
+    cloud_provider_secret_content            = "${base64gzip(var.cloud_controller_secret)}"
+    flexvolume_driver_secret_content         = "${base64gzip(var.flexvolume_driver_secret)}"
+    volume_provisioner_secret_content        = "${base64gzip(var.volume_provisioner_secret)}"
   }
 }
 

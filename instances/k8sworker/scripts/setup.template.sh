@@ -29,6 +29,14 @@ else
     SWAP_OPTION="--fail-swap-on=false"
 fi
 
+## Disable TX checksum offloading so we don't break VXLAN
+######################################
+BROADCOM_DRIVER=$(lsmod | grep bnxt_en | awk '{print $1}')
+if [[ -n "$${BROADCOM_DRIVER}" ]]; then
+   echo "Disabling hardware TX checksum offloading"
+   ethtool --offload $(ip -o -4 route show to default | awk '{print $5}') tx off
+fi
+
 ## etcd
 ######################################
 
@@ -150,6 +158,13 @@ cat >/etc/cni/net.d/10-flannel.conf <<EOF
 }
 EOF
 
+## Install Flex Volume Driver for OCI
+#####################################
+mkdir -p /usr/libexec/kubernetes/kubelet-plugins/volume/exec/oracle~oci/
+curl -L --retry 3 https://github.com/oracle/oci-flexvolume-driver/releases/download/0.2.0/oci -o/usr/libexec/kubernetes/kubelet-plugins/volume/exec/oracle~oci/oci
+chmod a+x /usr/libexec/kubernetes/kubelet-plugins/volume/exec/oracle~oci/oci
+
+
 ## Install kubelet, kubectl, and kubernetes-cni
 ###############################################
 yum-config-manager --add-repo http://yum.kubernetes.io/repos/kubernetes-el7-x86_64
@@ -223,6 +238,20 @@ sed -e "s/__FQDN_HOSTNAME__/$FQDN_HOSTNAME/g" \
 until [ "$(curl -k --cert /etc/kubernetes/ssl/apiserver.pem --key /etc/kubernetes/ssl/apiserver-key.pem $K8S_API_SERVER_LB/healthz 2>/dev/null)" == "ok" ]; do
 	sleep 3
 done
+
+# Setup CUDA devices before starting kubelet, so it detects the gpu(s)
+/sbin/modprobe nvidia
+if [ "$?" -eq 0 ]; then
+	# Create the /dev/nvidia* files by running nvidia-smi
+	nvidia-smi
+fi
+
+/sbin/modprobe nvidia-uvm
+if [ "$?" -eq 0 ]; then
+	# Find out the major device number used by the nvidia-uvm driver
+	DEVICE=$(grep nvidia-uvm /proc/devices | awk '{print $1}')
+	mknod -m 666 /dev/nvidia-uvm c $DEVICE 0
+fi
 
 sleep $[ ( $RANDOM % 10 )  + 1 ]s
 systemctl daemon-reload

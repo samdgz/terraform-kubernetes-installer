@@ -3,6 +3,28 @@ variable "tenancy_ocid" {}
 
 variable "compartment_ocid" {}
 
+variable "network_cidrs" {
+  type = "map"
+  default = {
+    VCN-CIDR          = "10.0.0.0/16"
+    PublicSubnetAD1   = "10.0.10.0/24"
+    PublicSubnetAD2   = "10.0.11.0/24"
+    PublicSubnetAD3   = "10.0.12.0/24"
+    etcdSubnetAD1     = "10.0.20.0/24"
+    etcdSubnetAD2     = "10.0.21.0/24"
+    etcdSubnetAD3     = "10.0.22.0/24"
+    masterSubnetAD1   = "10.0.30.0/24"
+    masterSubnetAD2   = "10.0.31.0/24"
+    masterSubnetAD3   = "10.0.32.0/24"
+    workerSubnetAD1   = "10.0.40.0/24"
+    workerSubnetAD2   = "10.0.41.0/24"
+    workerSubnetAD3   = "10.0.42.0/24"
+    k8sCCMLBSubnetAD1 = "10.0.50.0/24"
+    k8sCCMLBSubnetAD2 = "10.0.51.0/24"
+    k8sCCMLBSubnetAD3 = "10.0.52.0/24"
+  }
+}
+
 variable "domain_name" {
   default = "k8sbmcs.oraclevcn.com"
 }
@@ -170,6 +192,16 @@ variable "public_subnet_https_ingress" {
   default     = "0.0.0.0/0"
 }
 
+variable "external_icmp_ingress" {
+  description = "A CIDR notation IP range that is allowed to ICMP to instances on all the subnets"
+  default     = "0.0.0.0/0"
+}
+
+variable "internal_icmp_ingress" {
+  description = "A CIDR notation IP range that is allowed to ICMP to instances on all the subnets"
+  default     = "10.0.0.0/16"
+}
+
 variable "ssh_private_key" {
   description = "SSH private key used for instances (generated if left blank)"
   type        = "string"
@@ -265,7 +297,7 @@ variable "flannel_ver" {
 }
 
 variable "k8s_ver" {
-  default = "1.7.10"
+  default = "1.7.9"
 }
 
 variable "k8s_dashboard_ver" {
@@ -357,6 +389,43 @@ variable "flannel_backend" {
   description = "Flannel backend - possible choices are vxlan, udp, and host-gw"
   default = "VXLAN"
 }
+
 variable "oci_core_image" {
 }
+
+# Cloud controller 
+variable "cloud_controller_user_ocid" {
+  default = ""
+}
+
+variable "cloud_controller_user_fingerprint" {
+  default = ""
+}
+
+variable "cloud_controller_user_private_key_path" {
+  default = ""
+}
+
+# Flexvolume driver
+variable "flexvolume_driver_user_ocid" {
+  default = ""
+}
+variable "flexvolume_driver_user_fingerprint" {
+  default = ""
+}
+variable "flexvolume_driver_user_private_key_path" {
+  default = ""
+}
+
+# Flexvolume driver
+variable "volume_provisioner_user_ocid" {
+  default = ""
+}
+variable "volume_provisioner_user_fingerprint" {
+  default = ""
+}
+variable "volume_provisioner_user_private_key_path" {
+  default = ""
+}
+
 
