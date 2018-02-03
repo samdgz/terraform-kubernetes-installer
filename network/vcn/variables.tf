@@ -1,3 +1,29 @@
+variable "network_cidrs" {
+  type = "map"
+
+  default = {
+    VCN-CIDR          = "10.0.0.0/16"
+    PublicSubnetAD1   = "10.0.10.0/24"
+    PublicSubnetAD2   = "10.0.11.0/24"
+    PublicSubnetAD3   = "10.0.12.0/24"
+    natSubnetAD1      = "10.0.13.0/24"
+    natSubnetAD2      = "10.0.14.0/24"
+    natSubnetAD3      = "10.0.15.0/24"
+    etcdSubnetAD1     = "10.0.20.0/24"
+    etcdSubnetAD2     = "10.0.21.0/24"
+    etcdSubnetAD3     = "10.0.22.0/24"
+    masterSubnetAD1   = "10.0.30.0/24"
+    masterSubnetAD2   = "10.0.31.0/24"
+    masterSubnetAD3   = "10.0.32.0/24"
+    workerSubnetAD1   = "10.0.40.0/24"
+    workerSubnetAD2   = "10.0.41.0/24"
+    workerSubnetAD3   = "10.0.42.0/24"
+    k8sCCMLBSubnetAD1 = "10.0.50.0/24"
+    k8sCCMLBSubnetAD2 = "10.0.51.0/24"
+    k8sCCMLBSubnetAD3 = "10.0.52.0/24"
+  }
+}
+
 variable "tenancy_ocid" {}
 
 variable "control_plane_subnet_access" {
@@ -20,6 +46,11 @@ variable "additional_k8sworker_security_lists_ids" {
 }
 
 variable "additional_public_security_lists_ids" {
+  type    = "list"
+  default = []
+}
+
+variable "additional_nat_security_lists_ids" {
   type    = "list"
   default = []
 }
@@ -111,5 +142,9 @@ variable nat_instance_ad2_enabled {
 }
 
 variable nat_instance_ad3_enabled {
+  default = "false"
+}
+
+variable dedicated_nat_subnets {
   default = "false"
 }
