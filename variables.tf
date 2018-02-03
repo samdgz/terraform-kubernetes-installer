@@ -59,11 +59,6 @@ variable "label_prefix" {
   default     = ""
 }
 
-variable "additional_nat_security_lists_ids" {
-  type    = "list"
-  default = []
-}
-
 variable "additional_etcd_security_lists_ids" {
   type    = "list"
   default = []
@@ -80,6 +75,11 @@ variable "additional_k8s_worker_security_lists_ids" {
 }
 
 variable "additional_public_security_lists_ids" {
+  type    = "list"
+  default = []
+}
+
+variable "additional_nat_security_lists_ids" {
   type    = "list"
   default = []
 }
@@ -365,6 +365,11 @@ variable nat_instance_ad2_enabled {
 variable nat_instance_ad3_enabled {
   description = "Whether to provision a NAT instance in AD 3 (only applicable when control_plane_subnet_access=private)"
   default     = "false"
+}
+
+variable dedicated_nat_subnets {
+  description = "Whether to provision dedicated subnets in each AD that are only used by NAT instance(s) (only applicable when control_plane_subnet_access=private)"
+  default     = "true"
 }
 
 # iSCSI

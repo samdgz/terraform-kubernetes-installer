@@ -54,6 +54,7 @@ module "vcn" {
   nat_instance_ad2_enabled                = "${var.nat_instance_ad2_enabled}"
   nat_instance_ad3_enabled                = "${var.nat_instance_ad3_enabled}"
   nat_instance_ssh_public_key_openssh     = "${module.k8s-tls.ssh_public_key_openssh}"
+  dedicated_nat_subnets                   = "${var.dedicated_nat_subnets}"
   worker_ssh_ingress                      = "${var.worker_ssh_ingress}"
   worker_nodeport_ingress                 = "${var.worker_nodeport_ingress}"
 }
