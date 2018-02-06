@@ -9,6 +9,7 @@ data "template_file" "oci-cloud-controller-secret" {
     fingerprint = "${var.cloud_controller_user_fingerprint}"
     user        = "${var.cloud_controller_user_ocid }"
     key         = "${jsonencode(file(var.cloud_controller_user_private_key_path))}"
+    key_passphrase = "${var.cloud_controller_key_password}"
     
     subnet1 = "${var.subnet1}"
     subnet2 = "${var.subnet2}"
