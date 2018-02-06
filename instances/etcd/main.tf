@@ -15,7 +15,7 @@ resource "oci_core_instance" "TFInstanceEtcd" {
     display_name      = "${var.label_prefix}${var.display_name}-${count.index}"
     hostname_label    = "${var.hostname_label}-${count.index}"
     assign_public_ip  = "${(var.control_plane_subnet_access == "private") ? "false" : "true"}"
-    private_ip        = "${var.assign_private_ip == "true" ? cidrhost(lookup(var.network_cidrs,var.subnet_name), count.index+5) : ""}"
+    private_ip        = "${var.assign_private_ip == "true" ? cidrhost(lookup(var.network_cidrs,var.subnet_name), count.index+2) : ""}"
   },
 
   extended_metadata {
