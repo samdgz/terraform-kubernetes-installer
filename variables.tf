@@ -411,6 +411,10 @@ variable "cloud_controller_user_private_key_path" {
   default = ""
 }
 
+variable "cloud_controller_user_private_key_password" {
+  default = ""
+}
+
 # Flexvolume driver
 variable "flexvolume_driver_user_ocid" {
   default = ""
