@@ -360,3 +360,6 @@ variable "flannel_backend" {
 variable "oci_core_image" {
 }
 
+variable "encryption_secret" {
+  default = "7UeIkfo16qCDf+EPovyiARe1C419xwP/q8CtSmf6WDk="
+}
