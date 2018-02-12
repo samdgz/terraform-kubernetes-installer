@@ -3,6 +3,29 @@ variable "tenancy_ocid" {}
 
 variable "compartment_ocid" {}
 
+variable "network_cidrs" {
+  type = "map"
+
+  default = {
+    VCN-CIDR          = "10.0.0.0/16"
+    PublicSubnetAD1   = "10.0.10.0/24"
+    PublicSubnetAD2   = "10.0.11.0/24"
+    PublicSubnetAD3   = "10.0.12.0/24"
+    etcdSubnetAD1     = "10.0.20.0/24"
+    etcdSubnetAD2     = "10.0.21.0/24"
+    etcdSubnetAD3     = "10.0.22.0/24"
+    masterSubnetAD1   = "10.0.30.0/24"
+    masterSubnetAD2   = "10.0.31.0/24"
+    masterSubnetAD3   = "10.0.32.0/24"
+    workerSubnetAD1   = "10.0.40.0/24"
+    workerSubnetAD2   = "10.0.41.0/24"
+    workerSubnetAD3   = "10.0.42.0/24"
+    k8sCCMLBSubnetAD1 = "10.0.50.0/24"
+    k8sCCMLBSubnetAD2 = "10.0.51.0/24"
+    k8sCCMLBSubnetAD3 = "10.0.52.0/24"
+  }
+}
+
 variable "domain_name" {
   default = "k8sbmcs.oraclevcn.com"
 }
@@ -109,7 +132,7 @@ variable "etcdAd3Count" {
 }
 
 variable "etcd_endpoints" {
-  type="string"
+  type    = "string"
   default = " "
 }
 
@@ -177,12 +200,17 @@ variable "ssh_private_key" {
 }
 
 # Load Balancers
+variable "etcd_lb_enabled" {
+  description = "enable/disable the etcd load balancer. true: use the etcd load balancer ip. false:use a list of etcd instance ips."
+  default = "true"
+}
+
 variable "etcdLBShape" {
   default = "100Mbps"
 }
 
-variable "etcd_lb_enabled" {
-  description = "enable/disable the etcd load balancer. true: use the etcd load balancer ip. false:use a list of etcd instance ips."
+variable "master_oci_lb_enabled" {
+  description = "enable/disable the k8s master load balancer. true: use the k8s master load balancer ip. false: use a reverse proxy for k8s masters."
   default = "true"
 }
 
@@ -193,32 +221,32 @@ variable "k8sMasterLBShape" {
 # Docker log file config
 variable "etcd_docker_max_log_size" {
   description = "Maximum size of the etcd docker container logs"
-  default = "50m"
+  default     = "50m"
 }
 
 variable "etcd_docker_max_log_files" {
   description = "Maximum number of etcd docker container logs to rotate"
-  default = "5"
+  default     = "5"
 }
 
 variable "master_docker_max_log_size" {
   description = "Maximum size of the etcd docker container logs"
-  default = "50m"
+  default     = "50m"
 }
 
 variable "master_docker_max_log_files" {
   description = "Maximum number of etcd docker container logs to rotate"
-  default = "5"
+  default     = "5"
 }
 
 variable "worker_docker_max_log_size" {
   description = "Maximum size of the etcd docker container logs"
-  default = "50m"
+  default     = "50m"
 }
 
 variable "worker_docker_max_log_files" {
   description = "Maximum number of etcd docker json logs to rotate"
-  default = "5"
+  default     = "5"
 }
 
 # Kubernetes
@@ -302,6 +330,10 @@ variable "k8s_master_lb_access" {
   default     = "public"
 }
 
+variable "master_maintain_private_ip" {
+  default = "false"
+}
+
 variable "etcd_lb_access" {
   description = "Whether etcd load balancer is launched in a public or private subnet"
   default     = "private"
@@ -335,32 +367,32 @@ variable nat_instance_ad3_enabled {
 # iSCSI
 variable "worker_iscsi_volume_create" {
   description = "Bool if an iscsi volume should be attached and mounted at /var/lib/docker"
-  default = false
+  default     = false
 }
 
 variable "worker_iscsi_volume_size" {
   description = "Size of iscsi volume to be created"
-  default = 50
+  default     = 50
 }
 
 variable "worker_iscsi_volume_mount" {
   description = "Mount point of iscsi volume"
-  default = "/var/lib/docker"
+  default     = "/var/lib/docker"
 }
 
 variable "etcd_iscsi_volume_create" {
   description = "Bool if an iscsi volume should be attached and mounted at the etcd volume mount point /etcd"
-  default = false
+  default     = false
 }
 
 variable "etcd_iscsi_volume_size" {
   description = "Size of iscsi volume to be created"
-  default = 50
+  default     = 50
 }
 
 variable "flannel_backend" {
   description = "Flannel backend - possible choices are vxlan, udp, and host-gw"
-  default = "VXLAN"
+  default     = "VXLAN"
 }
 variable "oci_core_image" {
 }

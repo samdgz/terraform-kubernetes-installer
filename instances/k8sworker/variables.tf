@@ -83,3 +83,7 @@ variable "worker_iscsi_volume_mount" {
 }
 
 variable "image" {}
+
+variable "reverse_proxy_setup" {}
+
+variable "reverse_proxy_clount_init" {}
