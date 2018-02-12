@@ -9,7 +9,16 @@ variable "count" {
   default = "1"
 }
 
+variable "control_plane_subnet_access" {
+  description = "Whether instances in the control plane are launched in a public or private subnets"
+  default     = "public"
+}
+
+variable "network_cidrs" {
+  type = "map"
+}
 variable "subnet_id" {}
+variable "subnet_name" {}
 variable "domain_name" {}
 variable "shape" {}
 variable "tenancy_ocid" {}
@@ -74,4 +83,9 @@ variable "master_docker_max_log_size" {
 variable "master_docker_max_log_files" {
   description = "Maximum number of k8s master docker container json logs to rotate"
   default = "5"
+}
+
+variable "assign_private_ip" {
+  description = "Assign a static private ip based on CIDR block for that AD"
+  default = false
 }

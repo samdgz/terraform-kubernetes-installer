@@ -81,3 +81,7 @@ variable "worker_iscsi_volume_mount" {
   description = "Mount point of iscsi volume"
   default = "/var/lib/docker"
 }
+
+variable "reverse_proxy_setup" {}
+
+variable "reverse_proxy_clount_init" {}
