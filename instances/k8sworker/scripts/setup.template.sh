@@ -161,7 +161,7 @@ EOF
 ## Install Flex Volume Driver for OCI
 #####################################
 mkdir -p /usr/libexec/kubernetes/kubelet-plugins/volume/exec/oracle~oci/
-curl -L --retry 3 https://github.com/oracle/oci-flexvolume-driver/releases/download/0.5.1/oci -o/usr/libexec/kubernetes/kubelet-plugins/volume/exec/oracle~oci/oci
+curl -L --retry 3 https://github.com/oracle/oci-flexvolume-driver/releases/download/${flexvolume_driver_version}/oci -o/usr/libexec/kubernetes/kubelet-plugins/volume/exec/oracle~oci/oci
 chmod a+x /usr/libexec/kubernetes/kubelet-plugins/volume/exec/oracle~oci/oci
 
 
@@ -234,6 +234,7 @@ sed -e "s/__FQDN_HOSTNAME__/$FQDN_HOSTNAME/g" \
     -e "s/__SWAP_OPTION__/$SWAP_OPTION/g" \
     /root/services/kubelet.service > /etc/systemd/system/kubelet.service
 
+${reverse_proxy_setup}
 ## Wait for k8s master to be available. There is a possible race on pod networks otherwise.
 until [ "$(curl -k --cert /etc/kubernetes/ssl/apiserver.pem --key /etc/kubernetes/ssl/apiserver-key.pem $K8S_API_SERVER_LB/healthz 2>/dev/null)" == "ok" ]; do
 	sleep 3
@@ -259,6 +260,8 @@ systemctl enable kubelet
 systemctl start kubelet
 
 systemctl restart flannel
+
+yum install -y nfs-utils
 
 ######################################
 echo "Finished running setup.sh"

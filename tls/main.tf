@@ -19,7 +19,6 @@ resource "tls_self_signed_cert" "root-ca" {
   allowed_uses = [
     "key_encipherment",
     "cert_signing",
-    "digital_signature",
     "server_auth",
     "client_auth",
   ]
@@ -49,12 +48,11 @@ resource "tls_cert_request" "api-server" {
       "kubernetes.default.svc",
       "kubernetes.default.svc.cluster.local"
     ))}"
-
-  ip_addresses = [
-    "${var.master_lb_public_ip}",
-    "${var.k8s-serviceip}",
-    "127.0.0.1",
-  ]
+  ip_addresses = ["${distinct(list(
+      "${var.master_lb_public_ip}",
+      "${var.k8s-serviceip}",
+      "127.0.0.1"
+  ))}"]
 
   # system:masters group
   subject {
@@ -75,6 +73,7 @@ resource "tls_locally_signed_cert" "api-server" {
     "key_encipherment",
     "server_auth",
     "client_auth",
+    "digital_signature",
   ]
 }
 
