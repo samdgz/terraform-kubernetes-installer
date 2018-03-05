@@ -122,6 +122,13 @@ variable "public_subnet_http_ingress" {
 variable "public_subnet_https_ingress" {
   default = "0.0.0.0/0"
 }
+variable "external_icmp_ingress" {
+  default = "0.0.0.0/0"
+}
+
+variable "internal_icmp_ingress" {
+  default = "10.0.0.0/16"
+}
 
 variable "nat_instance_ssh_public_key_openssh" {}
 
