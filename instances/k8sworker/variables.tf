@@ -82,8 +82,6 @@ variable "worker_iscsi_volume_mount" {
   default = "/var/lib/docker"
 }
 
-variable "image" {}
-
 variable "reverse_proxy_setup" {}
 
 variable "reverse_proxy_clount_init" {}
