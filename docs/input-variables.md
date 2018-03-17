@@ -14,6 +14,25 @@ private_key_path                    | None (required)         | Private key file
 region                              | us-phoenix-1            | String value of region to create resources
 
 ## Optional Input Variables:
+name                                | default                 | description
+------------------------------------|-------------------------|-----------------
+multiple_compartments               | false       | For the Separation of Duties we need multiple compartments then set to true and specify all the 5 compartment ocids (nat_compartment_ocid,bastion_compartment_ocid,coreservice_compartment_ocid,network_compartment_ocid,lb_compartment_ocid)
+nat_compartment_ocid                | None (Optional)         | NAT Compartment's OCI OCID
+bastion_compartment_ocid            | None (Optional)         | Bastion Compartment's OCI OCID
+coreservice_compartment_ocid        | None (Optional)         | Core Service Compartment's OCI OCID
+network_compartment_ocid            | None (Optional)         | Network Compartment's OCI OCID
+lb_compartment_ocid                 | None (Optional)         | LB Compartment's OCI OCID
+
+The below is how the multiple compartments are organized
+
+name                                | OCI Resources                          | Subnets
+------------------------------------|----------------------------------------|-----------------
+network_compartment_ocid            | VCN, Internet Gateway, Route tables    |
+nat_compartment_ocid                | All NAT VMs in NATSubnetAD             | publicNATSubnetAD1/2/3
+bastion_compartment_ocid            | All Bastion VMs in BastionSubnetAD     | publicBastionSubnetAD1/2/3
+lb_compartment_ocid                 | LB instances in LBSubnetAD.            | publicSubnetAD1/2/3
+coreservice_compartment_ocid        | All Master, Worker, Etcd VMs in MasterSubnetAD, WorkerSubnetAD and EtcdSubnetAD. BVs associated with Worker and Etcd instances     | privateETCDSubnetAD1/2/3, privateK8SMasterSubnetAD1/2/3, privateK8SWorkerSubnetAD1/2/3
+
 
 ### Network Access Configuration
 
@@ -21,7 +40,7 @@ name                                | default     | description
 ------------------------------------|-------------|------------
 control_plane_subnet_access         | public      | Whether instances in the control plane are launched in a public or private subnets
 k8s_master_lb_access                | public      | Whether the Kubernetes Master Load Balancer is launched in a public or private subnets
-etcd_lb_access                	    | private	  | Whether the etcd Load Balancer is launched in a public or private subnets
+etcd_lb_access                	    | private	    | Whether the etcd Load Balancer is launched in a public or private subnets
 
 
 #### _Public_ Network Access (default)
@@ -103,6 +122,8 @@ worker_iscsi_volume_size            | unset                   | optional size of
 worker_iscsi_volume_mount           | /var/lib/docker         | optional mount path of iSCSI volume when worker_iscsi_volume_size is set
 etcd_iscsi_volume_create            | false                   | boolean flag indicating whether or not to attach an iSCSI volume to attach to each etcd node
 etcd_iscsi_volume_size              | 50                      | size in GBs of volume when etcd_iscsi_volume_create is set
+etcd_maintain_private_ip            | false                   | Assign an etcd instance a private ip based on the CIDR for that AD
+master_maintain_private_ip          | false                   | Assign a master instance a private ip based on the CIDR for that AD
 
 ### TLS Certificates & SSH key pair
 name                                | default                 | description
@@ -134,6 +155,7 @@ master_ol_image_name                | Oracle-Linux-7.4-2018.01.10-0  | Image nam
 worker_ol_image_name                | Oracle-Linux-7.4-2018.01.10-0  | Image name of an Oracle-Linux-7.X image to use for workers
 etcd_ol_image_name                  | Oracle-Linux-7.4-2018.01.10-0  | Image name of an Oracle-Linux-7.X image to use for etcd nodes
 nat_ol_image_name                   | Oracle-Linux-7.4-2018.01.10-0  | Image name of an Oracle-Linux-7.X image to use for NAT instances (if applicable)
+bastion_ol_image_name               | Oracle-Linux-7.4-2018.01.10-0  | Image name of an Oracle-Linux-7.X image to use for Bastion instances (if applicable)
 
 #### Docker logging configuration
 name                                | default   | description
@@ -156,7 +178,7 @@ name                                | default     | description
 ------------------------------------|-------------|------------
 control_plane_subnet_access         | public      | Whether instances in the control plane are launched in a public or private subnets
 k8s_master_lb_access                | public      | Whether the Kubernetes Master Load Balancer is launched in a public or private subnets
-etcd_lb_access                	    | private	  | Whether the etcd Load Balancer is launched in a public or private subnets
+etcd_lb_access                	    | private	    | Whether the etcd Load Balancer is launched in a public or private subnets
 
 #### _Public_ Network Access (default)
 
@@ -204,6 +226,17 @@ nat_instance_ad3_enabled            | "false"                 | whether to provi
 *Note*
 
 Even though we can configure a NAT instance per AD, this [diagram](./images/private_cp_subnet_public_lb_failure.jpg) illustrates that each NAT Instance is still represents a single point of failure for the private subnet that routes outbound traffic to it.
+
+
+The following input variables are used to configure the Bastion instance(s). A global security list is configured and attached to all the subnets:
+
+name                                | default                 | description
+------------------------------------|-------------------------|------------
+dedicated_bastion_subnets               | "true"                  | whether to provision dedicated subnets in each AD that are only used by Bastion instance(s) (separate subnets = separate control)
+bastionInstanceShape                    | VM.Standard1.1          | OCI shape for the optional Bastion instance. Size according to the amount of expected _outbound_ traffic from nodes and pods
+bastion_instance_ad1_enabled            | "true"                  | whether to provision a Bastion instance in AD 1 (only used when control_plane_subnet_access=private)
+bastion_instance_ad2_enabled            | "false"                 | whether to provision a Bastion instance in AD 2 (only used when control_plane_subnet_access=private)
+bastion_instance_ad3_enabled            | "false"                 | whether to provision a Bastion instance in AD 3 (only used when control_plane_subnet_access=private)
 
 #### _Private_ and _Public_ Network Access
 

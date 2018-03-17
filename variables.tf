@@ -3,6 +3,20 @@ variable "tenancy_ocid" {}
 
 variable "compartment_ocid" {}
 
+variable "network_compartment_ocid" {}
+
+variable "nat_compartment_ocid" {}
+
+variable "bastion_compartment_ocid" {}
+
+variable "lb_compartment_ocid" {}
+
+variable "coreservice_compartment_ocid" {}
+
+variable "multiple_compartments" {
+  default = "false"
+}
+
 variable "network_cidrs" {
   type = "map"
 
@@ -14,6 +28,9 @@ variable "network_cidrs" {
     natSubnetAD1      = "10.0.13.0/24"
     natSubnetAD2      = "10.0.14.0/24"
     natSubnetAD3      = "10.0.15.0/24"
+    bastionSubnetAD1  = "10.0.16.0/24"
+    bastionSubnetAD2  = "10.0.17.0/24"
+    bastionSubnetAD3  = "10.0.18.0/24"
     etcdSubnetAD1     = "10.0.20.0/24"
     etcdSubnetAD2     = "10.0.21.0/24"
     etcdSubnetAD3     = "10.0.22.0/24"
@@ -80,6 +97,11 @@ variable "additional_public_security_lists_ids" {
 }
 
 variable "additional_nat_security_lists_ids" {
+  type    = "list"
+  default = []
+}
+
+variable "additional_bastion_security_lists_ids" {
   type    = "list"
   default = []
 }
@@ -194,6 +216,16 @@ variable "public_subnet_http_ingress" {
 variable "public_subnet_https_ingress" {
   description = "A CIDR notation IP range that is allowed to HTTPs to instances on the public subnet"
   default     = "0.0.0.0/0"
+}
+
+variable "external_icmp_ingress" {
+  description = "A CIDR notation IP range that is allowed to ICMP to instances on all the subnets"
+  default     = "0.0.0.0/0"
+}
+
+variable "internal_icmp_ingress" {
+  description = "A CIDR notation IP range that is allowed to ICMP to instances on all the subnets"
+  default     = "10.0.0.0/16"
 }
 
 variable "ssh_private_key" {
@@ -323,6 +355,10 @@ variable "nat_ol_image_name" {
   default = "Oracle-Linux-7.4-2018.01.20-0"
 }
 
+variable "bastion_ol_image_name" {
+  default = "Oracle-Linux-7.4-2018.01.20-0"
+}
+
 variable "control_plane_subnet_access" {
   description = "Whether instances in the control plane are launched in a public or private subnets"
   default     = "public"
@@ -371,6 +407,32 @@ variable dedicated_nat_subnets {
   description = "Whether to provision dedicated subnets in each AD that are only used by NAT instance(s) (only applicable when control_plane_subnet_access=private)"
   default     = "true"
 }
+
+variable "bastionInstanceShape" {
+  description = "Make sure to size this instance according to the amount of expected outbound traffic"
+  default     = "VM.Standard1.1"
+}
+
+variable bastion_instance_ad1_enabled {
+  description = "Whether to provision a Bastion instance in AD 1 (only applicable when control_plane_subnet_access=private)"
+  default     = "true"
+}
+
+variable bastion_instance_ad2_enabled {
+  description = "Whether to provision a Bastion instance in AD 2 (only applicable when control_plane_subnet_access=private)"
+  default     = "false"
+}
+
+variable bastion_instance_ad3_enabled {
+  description = "Whether to provision a Bastion instance in AD 3 (only applicable when control_plane_subnet_access=private)"
+  default     = "false"
+}
+
+variable dedicated_bastion_subnets {
+  description = "Whether to provision dedicated subnets in each AD that are only used by Bastion instance(s) (only applicable when control_plane_subnet_access=private)"
+  default     = "true"
+}
+
 
 # iSCSI
 variable "worker_iscsi_volume_create" {
