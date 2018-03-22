@@ -15,7 +15,7 @@ yum-config-manager --enable ol7_addons ol7_latest ol7_UEKR4 ol7_optional ol7_opt
 until yum -y install docker-engine-${docker_ver}; do sleep 1 && echo -n "."; done
 
 cat <<EOF > /etc/sysconfig/docker
-OPTIONS="--selinux-enabled --log-opt max-size=${docker_max_log_size} --log-opt max-file=${docker_max_log_files}"
+OPTIONS="--selinux-enabled --log-opt max-size=${docker_max_log_size} --log-opt max-file=${docker_max_log_files}  --metrics-addr 0.0.0.0:9323 --experimental"
 DOCKER_CERT_PATH=/etc/docker
 GOTRACEBACK=crash
 EOF
