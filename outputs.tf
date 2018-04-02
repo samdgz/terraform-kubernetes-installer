@@ -1,3 +1,16 @@
+
+output "etcd_instance_ids" {
+  value = "${concat(module.instances-etcd-ad1.ids,module.instances-etcd-ad2.ids,module.instances-etcd-ad3.ids )}"
+}
+
+output "nat_instance_ids" {
+  value = "${concat(module.vcn.nat_instance_ad1_ids,module.vcn.nat_instance_ad2_ids,module.vcn.nat_instance_ad3_ids)}"
+}
+
+output "bastion_instance_ids" {
+  value = "${concat(module.vcn.bastion_instance_ad1_ids,module.vcn.bastion_instance_ad2_ids,module.vcn.bastion_instance_ad3_ids)}"
+}
+
 output "master_instance_ids" {
   value = "${concat(module.instances-k8smaster-ad1.ids,module.instances-k8smaster-ad2.ids,module.instances-k8smaster-ad3.ids )}"
 }
