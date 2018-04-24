@@ -70,6 +70,8 @@ module "vcn" {
   dedicated_bastion_subnets               = "${var.dedicated_bastion_subnets}"
   worker_ssh_ingress                      = "${var.worker_ssh_ingress}"
   worker_nodeport_ingress                 = "${var.worker_nodeport_ingress}"
+  management_instance_ssh_public_key_openssh     = "${module.k8s-tls.ssh_public_key_openssh}"
+  serviceproxy_instance_ssh_public_key_openssh     = "${module.k8s-tls.ssh_public_key_openssh}"
 }
 
 ### Compute Instance(s)

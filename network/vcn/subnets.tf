@@ -114,6 +114,66 @@ resource "oci_core_subnet" "BastionSubnetAD3" {
   dhcp_options_id     = "${oci_core_virtual_network.CompleteVCN.default_dhcp_options_id}"
 }
 
+resource "oci_core_subnet" "ManagementSubnetAD1" {
+  availability_domain = "${lookup(data.oci_identity_availability_domains.ADs.availability_domains[0],"name")}"
+  cidr_block          = "${lookup(var.network_cidrs, "managementSubnetAD1")}"
+  compartment_id      = "${(var.multiple_compartments == "true")  ? var.bastion_compartment_ocid : var.compartment_ocid
+}"
+  display_name        = "${var.label_prefix}${var.control_plane_subnet_access}ManagementSubnetAD1"
+  dns_label           = "managementsubnet1"
+  vcn_id              = "${oci_core_virtual_network.CompleteVCN.id}"
+
+  # Work around HIL issue #50 using join and use coalesce to pick the first route that is not empty (AD1 first pick)
+  route_table_id             = "${var.control_plane_subnet_access == "private" ? coalesce(join(" ", oci_core_route_table.NATInstanceAD1RouteTable.*.id), join(" ", oci_core_route_table.NATInstanceAD2RouteTable.*.id), join(" ", oci_core_route_table.NATInstanceAD3RouteTable.*.id), oci_core_route_table.PublicRouteTable.id) : oci_core_route_table.PublicRouteTable.id}"
+  dhcp_options_id            = "${oci_core_virtual_network.CompleteVCN.default_dhcp_options_id}"
+  security_list_ids          = ["${concat(list(oci_core_security_list.GlobalSecurityList.id),list(oci_core_security_list.ManagementSecurityList.id), var.additional_management_security_lists_ids)}"]
+  prohibit_public_ip_on_vnic = "${var.control_plane_subnet_access == "private" ? "true" : "false"}"
+
+  provisioner "local-exec" {
+    command = "sleep 5"
+  }
+}
+
+resource "oci_core_subnet" "ManagementSubnetAD2" {
+  availability_domain = "${lookup(data.oci_identity_availability_domains.ADs.availability_domains[0],"name")}"
+  cidr_block          = "${lookup(var.network_cidrs, "managementSubnetAD2")}"
+  compartment_id      = "${(var.multiple_compartments == "true")  ? var.bastion_compartment_ocid : var.compartment_ocid
+}"
+  display_name        = "${var.label_prefix}${var.control_plane_subnet_access}ManagementSubnetAD2"
+  dns_label           = "managementsubnet2"
+  vcn_id              = "${oci_core_virtual_network.CompleteVCN.id}"
+
+  # Work around HIL issue #50 using join and use coalesce to pick the first route that is not empty (AD1 first pick)
+  route_table_id             = "${var.control_plane_subnet_access == "private" ? coalesce(join(" ", oci_core_route_table.NATInstanceAD1RouteTable.*.id), join(" ", oci_core_route_table.NATInstanceAD2RouteTable.*.id), join(" ", oci_core_route_table.NATInstanceAD3RouteTable.*.id), oci_core_route_table.PublicRouteTable.id) : oci_core_route_table.PublicRouteTable.id}"
+  dhcp_options_id            = "${oci_core_virtual_network.CompleteVCN.default_dhcp_options_id}"
+  security_list_ids          = ["${concat(list(oci_core_security_list.GlobalSecurityList.id),list(oci_core_security_list.ManagementSecurityList.id), var.additional_management_security_lists_ids)}"]
+  prohibit_public_ip_on_vnic = "${var.control_plane_subnet_access == "private" ? "true" : "false"}"
+
+  provisioner "local-exec" {
+    command = "sleep 5"
+  }
+}
+
+resource "oci_core_subnet" "ManagementSubnetAD3" {
+  availability_domain = "${lookup(data.oci_identity_availability_domains.ADs.availability_domains[0],"name")}"
+  cidr_block          = "${lookup(var.network_cidrs, "managementSubnetAD3")}"
+  compartment_id      = "${(var.multiple_compartments == "true")  ? var.bastion_compartment_ocid : var.compartment_ocid
+}"
+  display_name        = "${var.label_prefix}${var.control_plane_subnet_access}ManagementSubnetAD3"
+  dns_label           = "managementsubnet3"
+  vcn_id              = "${oci_core_virtual_network.CompleteVCN.id}"
+
+  # Work around HIL issue #50 using join and use coalesce to pick the first route that is not empty (AD1 first pick)
+  route_table_id             = "${var.control_plane_subnet_access == "private" ? coalesce(join(" ", oci_core_route_table.NATInstanceAD1RouteTable.*.id), join(" ", oci_core_route_table.NATInstanceAD2RouteTable.*.id), join(" ", oci_core_route_table.NATInstanceAD3RouteTable.*.id), oci_core_route_table.PublicRouteTable.id) : oci_core_route_table.PublicRouteTable.id}"
+  dhcp_options_id            = "${oci_core_virtual_network.CompleteVCN.default_dhcp_options_id}"
+  security_list_ids          = ["${concat(list(oci_core_security_list.GlobalSecurityList.id),list(oci_core_security_list.ManagementSecurityList.id), var.additional_management_security_lists_ids)}"]
+  prohibit_public_ip_on_vnic = "${var.control_plane_subnet_access == "private" ? "true" : "false"}"
+
+  provisioner "local-exec" {
+    command = "sleep 5"
+  }
+}
+
 resource "oci_core_subnet" "etcdSubnetAD1" {
   availability_domain = "${lookup(data.oci_identity_availability_domains.ADs.availability_domains[0],"name")}"
   cidr_block          = "10.0.20.0/24"
@@ -276,3 +336,39 @@ resource "oci_core_subnet" "k8sWorkerSubnetAD3" {
   }
 }
 
+resource "oci_core_subnet" "ServiceProxySubnetAD1" {
+  # Provisioned only when k8s instances are in private subnets
+  count               = "${(var.control_plane_subnet_access == "private") && (var.dedicated_bastion_subnets == "true") ? "1" : "0"}"
+  availability_domain = "${lookup(data.oci_identity_availability_domains.ADs.availability_domains[0],"name")}"
+  cidr_block          = "${lookup(var.network_cidrs, "serviceProxySubnetAD1")}"
+  display_name        = "${var.label_prefix}publicServiceProxySubnetAD1"
+  compartment_id      = "${(var.multiple_compartments == "true")  ? var.bastion_compartment_ocid : var.compartment_ocid}"
+  vcn_id              = "${oci_core_virtual_network.CompleteVCN.id}"
+  route_table_id      = "${oci_core_route_table.PublicRouteTable.id}"
+  security_list_ids   = ["${concat(list(oci_core_security_list.GlobalSecurityList.id),list(oci_core_security_list.ServiceProxySecurityList.id), var.additional_serviceproxy_security_lists_ids)}"]
+  dhcp_options_id     = "${oci_core_virtual_network.CompleteVCN.default_dhcp_options_id}"
+}
+
+resource "oci_core_subnet" "ServiceProxySubnetAD2" {
+  count               = "${(var.control_plane_subnet_access == "private") && (var.dedicated_bastion_subnets == "true") ? "1" : "0"}"
+  availability_domain = "${lookup(data.oci_identity_availability_domains.ADs.availability_domains[1],"name")}"
+  cidr_block          = "${lookup(var.network_cidrs, "serviceProxySubnetAD2")}"
+  display_name        = "${var.label_prefix}publicServiceProxySubnetAD2"
+  compartment_id      = "${(var.multiple_compartments == "true")  ? var.bastion_compartment_ocid : var.compartment_ocid}"
+  vcn_id              = "${oci_core_virtual_network.CompleteVCN.id}"
+  route_table_id      = "${oci_core_route_table.PublicRouteTable.id}"
+  security_list_ids   = ["${concat(list(oci_core_security_list.GlobalSecurityList.id),list(oci_core_security_list.ServiceProxySecurityList.id), var.additional_serviceproxy_security_lists_ids)}"]
+  dhcp_options_id     = "${oci_core_virtual_network.CompleteVCN.default_dhcp_options_id}"
+}
+
+resource "oci_core_subnet" "ServiceProxySubnetAD3" {
+  count               = "${(var.control_plane_subnet_access == "private") && (var.dedicated_bastion_subnets == "true") ? "1" : "0"}"
+  availability_domain = "${lookup(data.oci_identity_availability_domains.ADs.availability_domains[2],"name")}"
+  cidr_block          = "${lookup(var.network_cidrs, "serviceProxySubnetAD3")}"
+  display_name        = "${var.label_prefix}publicServiceProxySubnetAD3"
+  compartment_id      = "${(var.multiple_compartments == "true")  ? var.bastion_compartment_ocid : var.compartment_ocid}"
+  vcn_id              = "${oci_core_virtual_network.CompleteVCN.id}"
+  route_table_id      = "${oci_core_route_table.PublicRouteTable.id}"
+  security_list_ids   = ["${concat(list(oci_core_security_list.GlobalSecurityList.id),list(oci_core_security_list.ServiceProxySecurityList.id), var.additional_serviceproxy_security_lists_ids)}"]
+  dhcp_options_id     = "${oci_core_virtual_network.CompleteVCN.default_dhcp_options_id}"
+}

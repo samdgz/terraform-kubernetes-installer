@@ -471,3 +471,37 @@ variable "oci_core_image" {
 variable "encryption_secret" {
   default = "7UeIkfo16qCDf+EPovyiARe1C419xwP/q8CtSmf6WDk="
 }
+
+variable "managementInstanceShape" {
+  description = "Make sure to size this instance according to the amount of expected outbound traffic"
+  default     = "VM.Standard1.1"
+}
+
+variable management_instance_ad1_enabled {
+  default     = "true"
+}
+
+variable management_instance_ad2_enabled {
+  default     = "false"
+}
+
+variable managament_instance_ad3_enabled {
+  default     = "false"
+}
+
+variable "serviceproxyInstanceShape" {
+  description = "Make sure to size this instance according to the amount of expected outbound traffic"
+  default     = "VM.Standard1.1"
+}
+
+variable serviceproxy_instance_ad1_enabled {
+  default     = "true"
+}
+
+variable serviceproxy_instance_ad2_enabled {
+  default     = "false"
+}
+
+variable serviceproxy_instance_ad3_enabled {
+  default     = "false"
+}

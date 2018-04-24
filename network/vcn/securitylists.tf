@@ -1,6 +1,6 @@
 resource "oci_core_security_list" "EtcdSubnet" {
   compartment_id = "${(var.multiple_compartments == "true")  ? var.coreservice_compartment_ocid : var.compartment_ocid}"
-  display_name   = "${var.label_prefix}etcd_security_list"
+  display_name   = "${var.label_prefix}EtcdSeclist"
   vcn_id         = "${oci_core_virtual_network.CompleteVCN.id}"
 
   egress_security_rules = [
@@ -12,26 +12,13 @@ resource "oci_core_security_list" "EtcdSubnet" {
 
   ingress_security_rules = [
     {
-      # Allow LBaaS and internal VCN traffic
-      protocol = "6"
-      source   = "${lookup(var.bmc_ingress_cidrs, "LBAAS-PHOENIX-1-CIDR")}"
-    },
-    {
-      protocol = "6"
-      source   = "${lookup(var.bmc_ingress_cidrs, "LBAAS-ASHBURN-1-CIDR")}"
-    },
-    {
-      protocol = "6"
-      source   = "${lookup(var.bmc_ingress_cidrs, "VCN-CIDR")}"
-    },
-    {
       tcp_options {
-        "max" = 22
-        "min" = 22
+        "max" = 2380
+        "min" = 2379
       }
 
       protocol = "6"
-      source   = "${var.etcd_ssh_ingress}"
+      source   = "10.0.20.0/24"
     },
     {
       tcp_options {
@@ -40,17 +27,139 @@ resource "oci_core_security_list" "EtcdSubnet" {
       }
 
       protocol = "6"
-      source   = "${var.etcd_cluster_ingress}"
+      source   = "10.0.21.0/24"
+    },
+    {
+      tcp_options {
+        "max" = 2380
+        "min" = 2379
+      }
+
+      protocol = "6"
+      source   = "10.0.22.0/24"
+    },
+    {
+      tcp_options {
+        "max" = 2380
+        "min" = 2379
+      }
+
+      protocol = "6"
+      source   = "10.0.30.0/24"
+    },
+    {
+      tcp_options {
+        "max" = 2380
+        "min" = 2379
+      }
+
+      protocol = "6"
+      source   = "10.0.31.0/24"
+    },
+    {
+      tcp_options {
+        "max" = 2380
+        "min" = 2379
+      }
+
+      protocol = "6"
+      source   = "10.0.32.0/24"
+    },
+    {
+      tcp_options {
+        "max" = 2380
+        "min" = 2379
+      }
+
+      protocol = "6"
+      source   = "10.0.40.0/24"
+    },
+    {
+      tcp_options {
+        "max" = 2380
+        "min" = 2379
+      }
+
+      protocol = "6"
+      source   = "10.0.41.0/24"
+    },
+    {
+      tcp_options {
+        "max" = 2380
+        "min" = 2379
+      }
+
+      protocol = "6"
+      source   = "10.0.42.0/24"
+    },
+    {
+      tcp_options {
+        "max" = 9102
+        "min" = 9102
+      }
+
+      protocol = "6"
+      source   = "10.0.40.0/24"
+    },
+    {
+      tcp_options {
+        "max" = 9102
+        "min" = 9102
+      }
+
+      protocol = "6"
+      source   = "10.0.41.0/24"
+    },
+    {
+      tcp_options {
+        "max" = 9102
+        "min" = 9102
+      }
+
+      protocol = "6"
+      source   = "10.0.42.0/24"
+    },
+    {
+      tcp_options {
+        "max" = 9323
+        "min" = 9323
+      }
+
+      protocol = "6"
+      source   = "10.0.40.0/24"
+    },
+    {
+      tcp_options {
+        "max" = 9323
+        "min" = 9323
+      }
+
+      protocol = "6"
+      source   = "10.0.41.0/24"
+    },
+    {
+      tcp_options {
+        "max" = 9323
+        "min" = 9323
+      }
+
+      protocol = "6"
+      source   = "10.0.42.0/24"
     },
   ]
+
+  lifecycle {
+    ignore_changes = ["egress_security_rules","ingress_security_rules"]
+  }
 
   provisioner "local-exec" {
     command = "sleep 5"
   }
 }
+
 resource "oci_core_security_list" "K8SMasterSubnet" {
   compartment_id = "${(var.multiple_compartments == "true")  ? var.coreservice_compartment_ocid : var.compartment_ocid}"
-  display_name   = "${var.label_prefix}k8sMaster_security_list"
+  display_name   = "${var.label_prefix}MasterSeclist"
   vcn_id         = "${oci_core_virtual_network.CompleteVCN.id}"
 
   egress_security_rules = [
@@ -62,35 +171,13 @@ resource "oci_core_security_list" "K8SMasterSubnet" {
 
   ingress_security_rules = [
     {
-      # Allow LBaaS and internal VCN traffic
-      protocol = "6"
-      source   = "${lookup(var.bmc_ingress_cidrs, "LBAAS-PHOENIX-1-CIDR")}"
-    },
-    {
-      protocol = "6"
-      source   = "${lookup(var.bmc_ingress_cidrs, "LBAAS-ASHBURN-1-CIDR")}"
-    },
-    {
-      protocol = "all"
-      source   = "${lookup(var.bmc_ingress_cidrs, "VCN-CIDR")}"
-    },
-    {
       tcp_options {
-        "max" = 22
-        "min" = 22
+        "max" = 443
+        "min" = 443
       }
 
       protocol = "6"
-      source   = "${var.master_ssh_ingress}"
-    },
-    {
-      tcp_options {
-        "max" = 8080
-        "min" = 8080
-      }
-
-      protocol = "6"
-      source   = "${lookup(var.bmc_ingress_cidrs, "VCN-CIDR")}"
+      source   = "10.0.60.0/24"
     },
     {
       tcp_options {
@@ -99,9 +186,211 @@ resource "oci_core_security_list" "K8SMasterSubnet" {
       }
 
       protocol = "6"
-      source   = "${var.master_https_ingress}"
+      source   = "10.0.61.0/24"
+    },
+    {
+      tcp_options {
+        "max" = 443
+        "min" = 443
+      }
+
+      protocol = "6"
+      source   = "10.0.62.0/24"
+    },
+    {
+      udp_options {
+        "max" = 8472
+        "min" = 8472
+      }
+
+      protocol = "17"
+      source   = "10.0.30.0/24"
+    },
+    {
+      udp_options {
+        "max" = 8472
+        "min" = 8472
+      }
+
+      protocol = "17"
+      source   = "10.0.31.0/24"
+    },
+    {
+      udp_options {
+        "max" = 8472
+        "min" = 8472
+      }
+
+      protocol = "17"
+      source   = "10.0.32.0/24"
+    },
+    {
+      tcp_options {
+        "max" = 10250
+        "min" = 10250
+      }
+
+      protocol = "6"
+      source   = "10.0.30.0/24"
+    },
+    {
+      tcp_options {
+        "max" = 10250
+        "min" = 10250
+      }
+
+      protocol = "6"
+      source   = "10.0.31.0/24"
+    },
+    {
+      tcp_options {
+        "max" = 10250
+        "min" = 10250
+      }
+
+      protocol = "6"
+      source   = "10.0.32.0/24"
+    },
+    {
+      tcp_options {
+        "max" = 443
+        "min" = 443
+      }
+
+      protocol = "6"
+      source   = "10.0.40.0/24"
+    },
+    {
+      tcp_options {
+        "max" = 443
+        "min" = 443
+      }
+
+      protocol = "6"
+      source   = "10.0.41.0/24"
+    },
+    {
+      tcp_options {
+        "max" = 443
+        "min" = 443
+      }
+
+      protocol = "6"
+      source   = "10.0.42.0/24"
+    },
+    {
+      udp_options {
+        "max" = 8472
+        "min" = 8472
+      }
+
+      protocol = "17"
+      source   = "10.0.40.0/24"
+    },
+    {
+      udp_options {
+        "max" = 8472
+        "min" = 8472
+      }
+
+      protocol = "17"
+      source   = "10.0.41.0/24"
+    },
+    {
+      udp_options {
+        "max" = 8472
+        "min" = 8472
+      }
+
+      protocol = "17"
+      source   = "10.0.42.0/24"
+    },
+    {
+      tcp_options {
+        "max" = 9102
+        "min" = 9102
+      }
+
+      protocol = "6"
+      source   = "10.0.40.0/24"
+    },
+    {
+      tcp_options {
+        "max" = 9102
+        "min" = 9102
+      }
+
+      protocol = "6"
+      source   = "10.0.41.0/24"
+    },
+    {
+      tcp_options {
+        "max" = 9102
+        "min" = 9102
+      }
+
+      protocol = "6"
+      source   = "10.0.42.0/24"
+    },
+    {
+      tcp_options {
+        "max" = 9323
+        "min" = 9323
+      }
+ 
+      protocol = "6"
+      source   = "10.0.40.0/24"
+    },
+    {
+      tcp_options {
+        "max" = 9323
+        "min" = 9323
+      }
+
+      protocol = "6"
+      source   = "10.0.41.0/24"
+    },
+    {
+      tcp_options {
+        "max" = 9323
+        "min" = 9323
+      }
+
+      protocol = "6"
+      source   = "10.0.42.0/24"
+    },
+    {
+      tcp_options {
+        "max" = 10250
+        "min" = 10250
+      }
+
+      protocol = "6"
+      source   = "10.0.40.0/24"
+    },
+    {
+      tcp_options {
+        "max" = 10250
+        "min" = 10250
+      }
+
+      protocol = "6"
+      source   = "10.0.41.0/24"
+    },
+    {
+      tcp_options {
+        "max" = 10250
+        "min" = 10250
+      }
+
+      protocol = "6"
+      source   = "10.0.42.0/24"
     },
   ]
+
+  lifecycle {
+    ignore_changes = ["egress_security_rules","ingress_security_rules"]
+  }
 
   provisioner "local-exec" {
     command = "sleep 5"
@@ -110,7 +399,7 @@ resource "oci_core_security_list" "K8SMasterSubnet" {
 
 resource "oci_core_security_list" "K8SWorkerSubnet" {
   compartment_id = "${(var.multiple_compartments == "true")  ? var.coreservice_compartment_ocid : var.compartment_ocid}"
-  display_name   = "${var.label_prefix}k8sWorker_security_list"
+  display_name   = "${var.label_prefix}WorkerSeclist"
   vcn_id         = "${oci_core_virtual_network.CompleteVCN.id}"
 
   egress_security_rules = [
@@ -122,48 +411,199 @@ resource "oci_core_security_list" "K8SWorkerSubnet" {
 
   ingress_security_rules = [
     {
-      # LBaaS and internal VCN traffic
-      protocol = "6"
-      source   = "${lookup(var.bmc_ingress_cidrs, "LBAAS-PHOENIX-1-CIDR")}"
-    },
-    {
-      protocol = "6"
-      source   = "${lookup(var.bmc_ingress_cidrs, "LBAAS-ASHBURN-1-CIDR")}"
-    },
-    {
-      protocol = "all"
-      source   = "${lookup(var.bmc_ingress_cidrs, "VCN-CIDR")}"
-    },
-    {
-      # External traffic
       tcp_options {
-        "max" = 22
-        "min" = 22
+        "min" = 32002
+        "max" = 32002
       }
 
       protocol = "6"
-      source   = "${var.worker_ssh_ingress}"
-    },
-    {
-      # External traffic
-      tcp_options {
-        "max" = 8200
-        "min" = 8200
-      }
-
-      protocol = "6"
-      source   = "${var.worker_ssh_ingress}"
+      source   = "10.0.10.0/24"
     },
     {
       tcp_options {
-        "min" = 30000
-        "max" = 32767
+        "min" = 32002
+        "max" = 32002
       }
 
       protocol = "6"
-      source   = "${var.worker_nodeport_ingress}"
+      source   = "10.0.11.0/24"
+    },
+    {
+      tcp_options {
+        "min" = 32002
+        "max" = 32002
+      }
+
+      protocol = "6"
+      source   = "10.0.12.0/24"
+    },
+    {
+      tcp_options {
+        "max" = 32003
+        "min" = 32000
+      }
+
+      protocol = "6"
+      source   = "10.0.60.0/24"
+    },
+    {
+      tcp_options {
+        "max" = 32003
+        "min" = 32000
+      }
+
+      protocol = "6"
+      source   = "10.0.61.0/24"
+    },
+    {
+      tcp_options {
+        "max" = 32003
+        "min" = 32000
+      }
+
+      protocol = "6"
+      source   = "10.0.62.0/24"
+    },
+    {
+      udp_options {
+        "max" = 8472
+        "min" = 8472
+      }
+
+      protocol = "17"
+      source   = "10.0.30.0/24"
+    },
+    {
+      udp_options {
+        "max" = 8472
+        "min" = 8472
+      }
+
+      protocol = "17"
+      source   = "10.0.31.0/24"
+    },
+    {
+      udp_options {
+        "max" = 8472
+        "min" = 8472
+      }
+
+      protocol = "17"
+      source   = "10.0.32.0/24"
+    },
+    {
+      tcp_options {
+        "max" = 10250
+        "min" = 10250
+      }
+
+      protocol = "6"
+      source   = "10.0.30.0/24"
+    },
+    {
+      tcp_options {
+        "max" = 10250
+        "min" = 10250
+      }
+
+      protocol = "6"
+      source   = "10.0.31.0/24"
+    },
+    {
+      tcp_options {
+        "max" = 10250
+        "min" = 10250
+      }
+
+      protocol = "6"
+      source   = "10.0.32.0/24"
+    },
+    {
+      udp_options {
+        "max" = 8472
+        "min" = 8472
+      }
+
+      protocol = "17"
+      source   = "10.0.40.0/24"
+    },
+    {
+      udp_options {
+        "max" = 8472
+        "min" = 8472
+      }
+
+      protocol = "17"
+      source   = "10.0.41.0/24"
+    },
+    {
+      udp_options {
+        "max" = 8472
+        "min" = 8472
+      }
+
+      protocol = "17"
+      source   = "10.0.42.0/24"
+    },
+    {
+      tcp_options {
+        "max" = 9102
+        "min" = 9102
+      }
+
+      protocol = "6"
+      source   = "10.0.40.0/24"
+    },
+    {
+      tcp_options {
+        "max" = 9102
+        "min" = 9102
+      }
+
+      protocol = "6"
+      source   = "10.0.41.0/24"
+    },
+    {
+      tcp_options {
+        "max" = 9102
+        "min" = 9102
+      }
+
+      protocol = "6"
+      source   = "10.0.42.0/24"
+    },
+    {
+      tcp_options {
+        "max" = 9323
+        "min" = 9323
+      }
+ 
+      protocol = "6"
+      source   = "10.0.40.0/24"
+    },
+    {
+      tcp_options {
+        "max" = 9323
+        "min" = 9323
+      }
+
+      protocol = "6"
+      source   = "10.0.41.0/24"
+    },
+    {
+      tcp_options {
+        "max" = 9323
+        "min" = 9323
+      }
+
+      protocol = "6"
+      source   = "10.0.42.0/24"
     },
   ]
+
+  lifecycle {
+    ignore_changes = ["egress_security_rules","ingress_security_rules"]
+  }
 
   provisioner "local-exec" {
     command = "sleep 5"
@@ -173,103 +613,42 @@ resource "oci_core_security_list" "K8SWorkerSubnet" {
 resource "oci_core_security_list" "PublicSecurityList" {
   count          = "${var.control_plane_subnet_access == "private" ? "1" : "0"}"
   compartment_id = "${(var.multiple_compartments == "true")  ? var.lb_compartment_ocid : var.compartment_ocid}"
-  display_name   = "public_security_list"
+  display_name   = "LBSeclist"
   vcn_id         = "${oci_core_virtual_network.CompleteVCN.id}"
 
-  egress_security_rules = [{
-    protocol    = "all"
-    destination = "0.0.0.0/0"
-  }]
+  egress_security_rules = [    
+    {
+      protocol = "6"
+      destination = "10.0.40.0/22"
+
+      tcp_options {
+        "min" = 32002
+        "max" = 32002
+      }
+    }
+  ]
 
   ingress_security_rules = [
     {
-      # Allow LBaaS
       protocol = "6"
-      source   = "${lookup(var.bmc_ingress_cidrs, "LBAAS-PHOENIX-1-CIDR")}"
-    },
-    {
-      protocol = "6"
-      source   = "${lookup(var.bmc_ingress_cidrs, "LBAAS-ASHBURN-1-CIDR")}"
-    },
-    {
-      # Allow internal VCN traffic
-      protocol = "all"
-      source   = "${lookup(var.bmc_ingress_cidrs, "VCN-CIDR")}"
-    },
-    {
-      # Access to SSH port to instances on the public network (like the NAT instance or a user-defined LB)
-      protocol = "6"
-      source   = "${var.public_subnet_ssh_ingress}"
-
-      tcp_options {
-        "min" = 22
-        "max" = 22
-      }
-    },
-    {
-      # Access to port 80 and 443 to instances on the public network (like the NAT instance or a user-defined LB)
-      protocol = "6"
-      source   = "${var.public_subnet_http_ingress}"
-
-      tcp_options {
-        "min" = 80
-        "max" = 80
-      }
-    },
-    {
-      protocol = "6"
-      source   = "${var.public_subnet_https_ingress}"
-
-      tcp_options {
-        "min" = 443
-        "max" = 443
-      }
-    },
-    {      
-      protocol = "6"
-      source   = "${var.public_subnet_ssh_ingress}"
-      
-      # External traffic
-      tcp_options {
-        "max" = 8200
-        "min" = 8200
-      }
-
-    },
-    {
-      protocol = "6"
-      source   = "${var.public_subnet_ssh_ingress}"
-      
-      tcp_options {
-        "min" = 30000
-        "max" = 32767
-      }
-    },
-    {
-      protocol = "1"
       source   = "0.0.0.0/0"
 
-      icmp_options {
-        "type" = 3
-        "code" = 4
-      }
-    },
-    {
-      protocol = "6"
-      source   = "${var.etcd_cluster_ingress}"
-      
       tcp_options {
-        "min" = 2379
-        "max" = 2380
+        "min" = 8200
+        "max" = 8200
       }
     },
   ]
+
+  lifecycle {
+    ignore_changes = ["egress_security_rules","ingress_security_rules"]
+  }
 }
 
 resource "oci_core_security_list" "NatSecurityList" {
-  count          = "${(var.control_plane_subnet_access == "private") && (var.dedicated_nat_subnets == "true") ? "1" : "0"}"
+  count          = "${var.control_plane_subnet_access == "private" ? "1" : "0"}"
   compartment_id = "${(var.multiple_compartments == "true")  ? var.nat_compartment_ocid : var.compartment_ocid}"
-  display_name   = "nat_security_list"
+  display_name   = "NATSeclist"
   vcn_id         = "${oci_core_virtual_network.CompleteVCN.id}"
 
   egress_security_rules = [{
@@ -279,126 +658,40 @@ resource "oci_core_security_list" "NatSecurityList" {
 
   ingress_security_rules = [
     {
-      protocol = "1"
-      source   = "${var.external_icmp_ingress}"
-
-      icmp_options {
-        "type" = 3
-        "code" = 4
-      }
-    },
-    {
-      protocol = "1"
-      source   = "${var.internal_icmp_ingress}"
-
-      icmp_options {
-        "type" = 3
-        "code" = 4
-      }
-    },
-    {
-      # Allow LBaaS
-      protocol = "6"
-      source   = "${lookup(var.bmc_ingress_cidrs, "LBAAS-PHOENIX-1-CIDR")}"
-    },
-    {
-      protocol = "6"
-      source   = "${lookup(var.bmc_ingress_cidrs, "LBAAS-ASHBURN-1-CIDR")}"
-    },
-    {
-      # Allow internal VCN traffic
       protocol = "all"
       source   = "${lookup(var.bmc_ingress_cidrs, "VCN-CIDR")}"
-    },
-    {
-      # Access to SSH port to instances on the public network (like the NAT instance or a user-defined LB)
-      protocol = "6"
-      source   = "${var.public_subnet_ssh_ingress}"
-
-      tcp_options {
-        "min" = 22
-        "max" = 22
-      }
-    },
-    {
-      # Access to port 80 and 443 to instances on the public network (like the NAT instance or a user-defined LB)
-      protocol = "6"
-      source   = "${var.public_subnet_http_ingress}"
-
-      tcp_options {
-        "min" = 80
-        "max" = 80
-      }
-    },
-    {
-      protocol = "6"
-      source   = "${var.public_subnet_https_ingress}"
-
-      tcp_options {
-        "min" = 443
-        "max" = 443
-      }
-    },
-    {
-      protocol = "6"
-      source   = "${var.etcd_cluster_ingress}"
-      
-      tcp_options {
-        "min" = 2379
-        "max" = 2380
-      }
-    },
+    }
   ]
+
+  lifecycle {
+    ignore_changes = ["egress_security_rules","ingress_security_rules"]
+  }
 }
 
 resource "oci_core_security_list" "BastionSecurityList" {
-  count          = "${(var.control_plane_subnet_access == "private") && (var.dedicated_bastion_subnets == "true") ? "1" : "0"}"
+  count          = "${(var.control_plane_subnet_access == "private") && (var.dedicated_bastion_subnets == "true") ? "1" : "
+0"}"
   compartment_id = "${(var.multiple_compartments == "true")  ? var.bastion_compartment_ocid : var.compartment_ocid}"
-  display_name   = "bastion_security_list"
+  display_name   = "${var.label_prefix}BastionSeclist"
   vcn_id         = "${oci_core_virtual_network.CompleteVCN.id}"
 
-  egress_security_rules = [{
-    protocol    = "all"
-    destination = "0.0.0.0/0"
-  }]
+  egress_security_rules = [    
+    {
+      protocol = "6"
+      destination = "${lookup(var.bmc_ingress_cidrs, "VCN-CIDR")}"
+
+      tcp_options {
+        "min" = 22
+        "max" = 22
+      }
+    },
+
+  ]
 
   ingress_security_rules = [
     {
-      protocol = "1"
-      source   = "${var.external_icmp_ingress}"
-
-      icmp_options {
-        "type" = 3
-        "code" = 4
-      }
-    },
-    {
-      protocol = "1"
-      source   = "${var.internal_icmp_ingress}"
-
-      icmp_options {
-        "type" = 3
-        "code" = 4
-      }
-    },
-    {
-      # Allow LBaaS
       protocol = "6"
-      source   = "${lookup(var.bmc_ingress_cidrs, "LBAAS-PHOENIX-1-CIDR")}"
-    },
-    {
-      protocol = "6"
-      source   = "${lookup(var.bmc_ingress_cidrs, "LBAAS-ASHBURN-1-CIDR")}"
-    },
-    {
-      # Allow internal VCN traffic
-      protocol = "all"
-      source   = "${lookup(var.bmc_ingress_cidrs, "VCN-CIDR")}"
-    },
-    {
-      # Access to SSH port to instances on the public network (like the NAT instance or a user-defined LB)
-      protocol = "6"
-      source   = "${var.public_subnet_ssh_ingress}"
+      source   = "156.151.0.0/16"
 
       tcp_options {
         "min" = 22
@@ -406,39 +699,78 @@ resource "oci_core_security_list" "BastionSecurityList" {
       }
     },
     {
-      # Access to port 80 and 443 to instances on the public network (like the NAT instance or a user-defined LB)
       protocol = "6"
-      source   = "${var.public_subnet_http_ingress}"
+      source   = "137.254.7.160/27"
 
       tcp_options {
-        "min" = 80
-        "max" = 80
+        "min" = 22
+        "max" = 22
       }
     },
     {
       protocol = "6"
-      source   = "${var.public_subnet_https_ingress}"
+      source   = "148.87.23.0/27"
 
       tcp_options {
-        "min" = 443
-        "max" = 443
+        "min" = 22
+        "max" = 22
       }
     },
     {
       protocol = "6"
-      source   = "${var.etcd_cluster_ingress}"
-      
+      source   = "148.87.66.160/27"
+
       tcp_options {
-        "min" = 2379
-        "max" = 2380
+        "min" = 22
+        "max" = 22
+      }
+    },
+    {
+      protocol = "6"
+      source   = "209.17.37.96/27"
+
+      tcp_options {
+        "min" = 22
+        "max" = 22
+      }
+    },
+    {
+      protocol = "6"
+      source   = "209.17.40.32/27"
+
+      tcp_options {
+        "min" = 22
+        "max" = 22
+      }
+    },
+    {
+      protocol = "6"
+      source   = "148.87.0.0/16"
+
+      tcp_options {
+        "min" = 22
+        "max" = 22
+      }
+    },
+    {
+      protocol = "6"
+      source   = "130.61.0.0/16"
+
+      tcp_options {
+        "min" = 22
+        "max" = 22
       }
     },
   ]
+
+  lifecycle {
+    ignore_changes = ["egress_security_rules","ingress_security_rules"]
+  }
 }
 
 resource "oci_core_security_list" "GlobalSecurityList" {
   compartment_id = "${(var.multiple_compartments == "true")  ? var.network_compartment_ocid : var.compartment_ocid}"
-  display_name   = "${var.label_prefix}global_security_list"
+  display_name   = "${var.label_prefix}GlobalSeclist"
   vcn_id         = "${oci_core_virtual_network.CompleteVCN.id}"
 
   egress_security_rules = [
@@ -456,7 +788,7 @@ resource "oci_core_security_list" "GlobalSecurityList" {
       }
 
       protocol = "6"
-      source   = "10.0.16.0/24"
+      source   = "10.0.60.0/24"
     },
     {
       tcp_options {
@@ -465,7 +797,7 @@ resource "oci_core_security_list" "GlobalSecurityList" {
       }
 
       protocol = "6"
-      source   = "10.0.17.0/24"
+      source   = "10.0.61.0/24"
     },
     {
       tcp_options {
@@ -474,36 +806,146 @@ resource "oci_core_security_list" "GlobalSecurityList" {
       }
 
       protocol = "6"
-      source   = "10.0.18.0/24"
+      source   = "10.0.62.0/24"
+    }
+  ]
+
+  lifecycle {
+    ignore_changes = ["egress_security_rules","ingress_security_rules"]
+  }
+
+  provisioner "local-exec" {
+    command = "sleep 5"
+  }
+}
+
+resource "oci_core_security_list" "ManagementSecurityList" {
+  compartment_id = "${(var.multiple_compartments == "true")  ? var.bastion_compartment_ocid : var.compartment_ocid}"
+  display_name   = "${var.label_prefix}ManagementSeclist"
+  vcn_id         = "${oci_core_virtual_network.CompleteVCN.id}"
+
+  egress_security_rules = [
+    {
+      destination = "0.0.0.0/0"
+      protocol    = "all"
     },
     {
-      protocol = "1"
-      source   = "10.0.16.0/24"
+      protocol = "6"
+      destination = "10.0.30.0/24"
 
-      icmp_options {
-        "type" = 3
-        "code" = 4
+      tcp_options {
+        "min" = 443
+        "max" = 443
       }
     },
     {
-      protocol = "1"
-      source   = "10.0.17.0/24"
+      protocol = "6"
+      destination = "10.0.31.0/24"
 
-      icmp_options {
-        "type" = 3
-        "code" = 4
+      tcp_options {
+        "min" = 443
+        "max" = 443
       }
     },
     {
-      protocol = "1"
-      source   = "10.0.18.0/24"
+      protocol = "6"
+      destination = "10.0.32.0/24"
 
-      icmp_options {
-        "type" = 3
-        "code" = 4
+      tcp_options {
+        "min" = 443
+        "max" = 443
+      }
+    },
+    {
+      protocol = "6"
+      destination = "10.0.40.0/24"
+
+      tcp_options {
+        "min" = 32000
+        "max" = 32003
+      }
+    },
+    {
+      protocol = "6"
+      destination = "10.0.41.0/24"
+
+      tcp_options {
+        "min" = 32000
+        "max" = 32003
+      }
+    },
+    {
+      protocol = "6"
+      destination = "10.0.42.0/24"
+
+      tcp_options {
+        "min" = 32000
+        "max" = 32003
       }
     },
   ]
+
+  ingress_security_rules = [
+    {
+      tcp_options {
+        "max" = 22
+        "min" = 22
+      }
+
+      protocol = "6"
+      source   = "10.0.16.0/24"
+    },
+    {
+      tcp_options {
+        "max" = 22
+        "min" = 22
+      }
+
+      protocol = "6"
+      source   = "10.0.17.0/24"
+    },
+    {
+      tcp_options {
+        "max" = 22
+        "min" = 22
+      }
+
+      protocol = "6"
+      source   = "10.0.18.0/24"
+    }
+  ]
+
+  lifecycle {
+    ignore_changes = ["egress_security_rules","ingress_security_rules"]
+  }
+
+  provisioner "local-exec" {
+    command = "sleep 5"
+  }
+}
+
+resource "oci_core_security_list" "ServiceProxySecurityList" {
+  compartment_id = "${(var.multiple_compartments == "true")  ? var.bastion_compartment_ocid : var.compartment_ocid}"
+  display_name   = "${var.label_prefix}ServiceProxySeclist"
+  vcn_id         = "${oci_core_virtual_network.CompleteVCN.id}"
+
+  egress_security_rules = [
+    {
+      destination = "0.0.0.0/0"
+      protocol    = "all"
+    },
+  ]
+
+  ingress_security_rules = [
+    {
+      protocol = "all"
+      source   = "0.0.0.0/0"
+    },
+  ]
+
+  lifecycle {
+    ignore_changes = ["egress_security_rules","ingress_security_rules"]
+  }
 
   provisioner "local-exec" {
     command = "sleep 5"

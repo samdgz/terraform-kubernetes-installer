@@ -11,6 +11,14 @@ output "bastion_instance_ids" {
   value = "${concat(module.vcn.bastion_instance_ad1_ids,module.vcn.bastion_instance_ad2_ids,module.vcn.bastion_instance_ad3_ids)}"
 }
 
+output "management_instance_ids" {
+  value = "${concat(module.vcn.management_instance_ad1_ids,module.vcn.management_instance_ad2_ids,module.vcn.management_instance_ad3_ids)}"
+}
+
+output "serviceproxy_instance_ids" {
+  value = "${concat(module.vcn.serviceproxy_instance_ad1_ids,module.vcn.serviceproxy_instance_ad2_ids,module.vcn.serviceproxy_instance_ad3_ids)}"
+}
+
 output "master_instance_ids" {
   value = "${concat(module.instances-k8smaster-ad1.ids,module.instances-k8smaster-ad2.ids,module.instances-k8smaster-ad3.ids )}"
 }
@@ -185,4 +193,20 @@ output "control_plane_subnet_access" {
 output "kubeconfig" {
   sensitive = true
   value     = "${module.kubeconfig.kubeconfig}"
+}
+
+output "management_instance_public_ips" {
+  value = "${compact(concat(module.vcn.management_instance_ad1_public_ips,module.vcn.management_instance_ad2_public_ips,module.vcn.management_instance_ad3_public_ips))}"
+}
+
+output "management_instance_private_ips" {
+  value = "${compact(concat(module.vcn.management_instance_ad1_private_ips,module.vcn.management_instance_ad2_private_ips,module.vcn.management_instance_ad3_private_ips))}"
+}
+
+output "serviceproxy_instance_public_ips" {
+  value = "${compact(concat(module.vcn.serviceproxy_instance_ad1_public_ips,module.vcn.serviceproxy_instance_ad2_public_ips,module.vcn.serviceproxy_instance_ad3_public_ips))}"
+}
+
+output "serviceproxy_instance_private_ips" {
+  value = "${compact(concat(module.vcn.serviceproxy_instance_ad1_private_ips,module.vcn.serviceproxy_instance_ad2_private_ips,module.vcn.serviceproxy_instance_ad3_private_ips))}"
 }

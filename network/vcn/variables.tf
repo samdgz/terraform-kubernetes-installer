@@ -12,6 +12,9 @@ variable "network_cidrs" {
     bastionSubnetAD1  = "10.0.16.0/24"
     bastionSubnetAD2  = "10.0.17.0/24"
     bastionSubnetAD3  = "10.0.18.0/24"
+    serviceProxySubnetAD1  = "10.0.70.0/24"
+    serviceProxySubnetAD2  = "10.0.71.0/24"
+    serviceProxySubnetAD3  = "10.0.72.0/24"
     etcdSubnetAD1     = "10.0.20.0/24"
     etcdSubnetAD2     = "10.0.21.0/24"
     etcdSubnetAD3     = "10.0.22.0/24"
@@ -24,6 +27,9 @@ variable "network_cidrs" {
     k8sCCMLBSubnetAD1 = "10.0.50.0/24"
     k8sCCMLBSubnetAD2 = "10.0.51.0/24"
     k8sCCMLBSubnetAD3 = "10.0.52.0/24"
+    managementSubnetAD1  = "10.0.60.0/24"
+    managementSubnetAD2  = "10.0.61.0/24"
+    managementSubnetAD3  = "10.0.62.0/24"
   }
 }
 
@@ -63,6 +69,15 @@ variable "additional_bastion_security_lists_ids" {
   default = []
 }
 
+variable "additional_management_security_lists_ids" {
+  type    = "list"
+  default = []
+}
+
+variable "additional_serviceproxy_security_lists_ids" {
+  type    = "list"
+  default = []
+}
 # VCN
 
 variable "label_prefix" {
@@ -205,5 +220,49 @@ variable bastion_instance_ad3_enabled {
 }
 
 variable dedicated_bastion_subnets {
+  default = "false"
+}
+
+variable "management_instance_ssh_public_key_openssh" {}
+
+variable "management_instance_oracle_linux_image_name" {
+  default = "Oracle-Linux-7.4-2018.01.10-0"
+}
+
+variable "management_instance_shape" {
+  default = "VM.Standard1.2"
+}
+
+variable management_instance_ad1_enabled {
+  default = "false"
+}
+
+variable management_instance_ad2_enabled {
+  default = "true"
+}
+
+variable management_instance_ad3_enabled {
+  default = "false"
+}
+
+variable "serviceproxy_instance_ssh_public_key_openssh" {}
+
+variable "serviceproxy_instance_oracle_linux_image_name" {
+  default = "Oracle-Linux-7.4-2018.01.10-0"
+}
+
+variable "serviceproxy_instance_shape" {
+  default = "VM.Standard1.2"
+}
+
+variable serviceproxy_instance_ad1_enabled {
+  default = "false"
+}
+
+variable serviceproxy_instance_ad2_enabled {
+  default = "true"
+}
+
+variable serviceproxy_instance_ad3_enabled {
   default = "false"
 }
