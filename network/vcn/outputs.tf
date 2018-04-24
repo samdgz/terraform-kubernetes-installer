@@ -157,3 +157,97 @@ output "route_for_complete_id" {
 output "dhcp_options_id" {
   value = "${oci_core_virtual_network.CompleteVCN.default_dhcp_options_id}"
 }
+output "management_subnet_ad1_id" {
+  value = "${oci_core_subnet.ManagementSubnetAD1.*.id}"
+}
+
+output "management_subnet_ad2_id" {
+  value = "${oci_core_subnet.ManagementSubnetAD2.*.id}"
+}
+
+output "management_subnet_ad3_id" {
+  value = "${oci_core_subnet.ManagementSubnetAD3.*.id}"
+}
+
+output "management_instance_ad1_ids" {
+  value = ["${oci_core_instance.ManagementInstanceAD1.*.id}"]
+}
+
+output "management_instance_ad1_private_ips" {
+  value = ["${oci_core_instance.ManagementInstanceAD1.*.private_ip}"]
+}
+
+output "management_instance_ad1_public_ips" {
+  value = ["${oci_core_instance.ManagementInstanceAD1.*.public_ip}"]
+}
+
+output "management_instance_ad2_ids" {
+  value = ["${oci_core_instance.ManagementInstanceAD2.*.id}"]
+}
+
+output "management_instance_ad2_private_ips" {
+  value = ["${oci_core_instance.ManagementInstanceAD2.*.private_ip}"]
+}
+
+output "management_instance_ad2_public_ips" {
+  value = ["${oci_core_instance.ManagementInstanceAD2.*.public_ip}"]
+}
+
+output "management_instance_ad3_ids" {
+  value = ["${oci_core_instance.ManagementInstanceAD3.*.id}"]
+}
+
+output "management_instance_ad3_private_ips" {
+  value = ["${oci_core_instance.ManagementInstanceAD3.*.private_ip}"]
+}
+
+output "management_instance_ad3_public_ips" {
+  value = ["${oci_core_instance.ManagementInstanceAD3.*.public_ip}"]
+}
+output "serviceproxy_subnet_ad1_id" {
+  value = "${oci_core_subnet.ServiceProxySubnetAD1.*.id}"
+}
+
+output "serviceproxy_subnet_ad2_id" {
+  value = "${oci_core_subnet.ServiceProxySubnetAD2.*.id}"
+}
+
+output "serviceproxy_subnet_ad3_id" {
+  value = "${oci_core_subnet.ServiceProxySubnetAD3.*.id}"
+}
+
+output "serviceproxy_instance_ad1_ids" {
+  value = ["${oci_core_instance.ServiceProxyInstanceAD1.*.id}"]
+}
+
+output "serviceproxy_instance_ad1_private_ips" {
+  value = ["${oci_core_instance.ServiceProxyInstanceAD1.*.private_ip}"]
+}
+
+output "serviceproxy_instance_ad1_public_ips" {
+  value = ["${oci_core_instance.ServiceProxyInstanceAD1.*.public_ip}"]
+}
+
+output "serviceproxy_instance_ad2_ids" {
+  value = ["${oci_core_instance.ServiceProxyInstanceAD2.*.id}"]
+}
+
+output "serviceproxy_instance_ad2_private_ips" {
+  value = ["${oci_core_instance.ServiceProxyInstanceAD2.*.private_ip}"]
+}
+
+output "serviceproxy_instance_ad2_public_ips" {
+  value = ["${oci_core_instance.ServiceProxyInstanceAD2.*.public_ip}"]
+}
+
+output "serviceproxy_instance_ad3_ids" {
+  value = ["${oci_core_instance.ServiceProxyInstanceAD3.*.id}"]
+}
+
+output "serviceproxy_instance_ad3_private_ips" {
+  value = ["${oci_core_instance.ServiceProxyInstanceAD3.*.private_ip}"]
+}
+
+output "serviceproxy_instance_ad3_public_ips" {
+  value = ["${oci_core_instance.ServiceProxyInstanceAD3.*.public_ip}"]
+}
