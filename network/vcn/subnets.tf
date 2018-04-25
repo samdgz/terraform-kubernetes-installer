@@ -120,7 +120,7 @@ resource "oci_core_subnet" "ManagementSubnetAD1" {
   compartment_id      = "${(var.multiple_compartments == "true")  ? var.bastion_compartment_ocid : var.compartment_ocid
 }"
   display_name        = "${var.label_prefix}${var.control_plane_subnet_access}ManagementSubnetAD1"
-  dns_label           = "managementsubnet1"
+  dns_label           = "mgmtsubnet1"
   vcn_id              = "${oci_core_virtual_network.CompleteVCN.id}"
 
   # Work around HIL issue #50 using join and use coalesce to pick the first route that is not empty (AD1 first pick)
@@ -140,7 +140,7 @@ resource "oci_core_subnet" "ManagementSubnetAD2" {
   compartment_id      = "${(var.multiple_compartments == "true")  ? var.bastion_compartment_ocid : var.compartment_ocid
 }"
   display_name        = "${var.label_prefix}${var.control_plane_subnet_access}ManagementSubnetAD2"
-  dns_label           = "managementsubnet2"
+  dns_label           = "mgmtsubnet2"
   vcn_id              = "${oci_core_virtual_network.CompleteVCN.id}"
 
   # Work around HIL issue #50 using join and use coalesce to pick the first route that is not empty (AD1 first pick)
@@ -160,7 +160,7 @@ resource "oci_core_subnet" "ManagementSubnetAD3" {
   compartment_id      = "${(var.multiple_compartments == "true")  ? var.bastion_compartment_ocid : var.compartment_ocid
 }"
   display_name        = "${var.label_prefix}${var.control_plane_subnet_access}ManagementSubnetAD3"
-  dns_label           = "managementsubnet3"
+  dns_label           = "mgmtsubnet3"
   vcn_id              = "${oci_core_virtual_network.CompleteVCN.id}"
 
   # Work around HIL issue #50 using join and use coalesce to pick the first route that is not empty (AD1 first pick)
