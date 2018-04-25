@@ -12,6 +12,8 @@ resource "oci_core_instance" "ManagementInstanceAD1" {
 
   create_vnic_details {
     subnet_id = "${(var.control_plane_subnet_access == "private") && (var.dedicated_bastion_subnets == "true") ? "${element(concat(oci_core_subnet.ManagementSubnetAD1.*.id,list("")),0)}" : "${oci_core_subnet.PublicSubnetAD1.id}"}"
+    assign_public_ip  = "${(var.control_plane_subnet_access == "private") ? "false" : "true"}"
+   
   }
 
   metadata {
@@ -33,6 +35,7 @@ resource "oci_core_instance" "ManagementInstanceAD2" {
 
   create_vnic_details {
     subnet_id = "${(var.control_plane_subnet_access == "private") && (var.dedicated_bastion_subnets == "true") ? "${element(concat(oci_core_subnet.ManagementSubnetAD2.*.id,list("")),0)}" : "${oci_core_subnet.PublicSubnetAD2.id}"}"
+    assign_public_ip  = "${(var.control_plane_subnet_access == "private") ? "false" : "true"}"
   }
 
   metadata {
@@ -54,6 +57,7 @@ resource "oci_core_instance" "ManagementInstanceAD3" {
 
   create_vnic_details {
     subnet_id = "${(var.control_plane_subnet_access == "private") && (var.dedicated_bastion_subnets == "true") ? "${element(concat(oci_core_subnet.ManagementSubnetAD3.*.id,list("")),0)}" : "${element(concat(oci_core_subnet.PublicSubnetAD3.*.id,list("")),0)}"}"
+    assign_public_ip  = "${(var.control_plane_subnet_access == "private") ? "false" : "true"}"
   }
 
   metadata {
