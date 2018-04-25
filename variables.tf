@@ -485,7 +485,7 @@ variable management_instance_ad2_enabled {
   default     = "false"
 }
 
-variable managament_instance_ad3_enabled {
+variable management_instance_ad3_enabled {
   default     = "false"
 }
 
