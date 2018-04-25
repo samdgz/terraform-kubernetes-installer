@@ -71,7 +71,15 @@ module "vcn" {
   worker_ssh_ingress                      = "${var.worker_ssh_ingress}"
   worker_nodeport_ingress                 = "${var.worker_nodeport_ingress}"
   management_instance_ssh_public_key_openssh     = "${module.k8s-tls.ssh_public_key_openssh}"
+  management_instance_shape                  = "${var.managementInstanceShape}"
+  management_instance_ad1_enabled            = "${var.management_instance_ad1_enabled}"
+  management_instance_ad2_enabled            = "${var.management_instance_ad2_enabled}"
+  management_instance_ad3_enabled            = "${var.management_instance_ad3_enabled}"
   serviceproxy_instance_ssh_public_key_openssh     = "${module.k8s-tls.ssh_public_key_openssh}"
+  serviceproxy_instance_shape                  = "${var.serviceproxyInstanceShape}"
+  serviceproxy_instance_ad1_enabled            = "${var.serviceproxy_instance_ad1_enabled}"
+  serviceproxy_instance_ad2_enabled            = "${var.serviceproxy_instance_ad2_enabled}"
+  serviceproxy_instance_ad3_enabled            = "${var.serviceproxy_instance_ad3_enabled}"
 }
 
 ### Compute Instance(s)
