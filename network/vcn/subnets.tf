@@ -135,7 +135,7 @@ resource "oci_core_subnet" "ManagementSubnetAD1" {
 }
 
 resource "oci_core_subnet" "ManagementSubnetAD2" {
-  availability_domain = "${lookup(data.oci_identity_availability_domains.ADs.availability_domains[0],"name")}"
+  availability_domain = "${lookup(data.oci_identity_availability_domains.ADs.availability_domains[1],"name")}"
   cidr_block          = "${lookup(var.network_cidrs, "managementSubnetAD2")}"
   compartment_id      = "${(var.multiple_compartments == "true")  ? var.bastion_compartment_ocid : var.compartment_ocid
 }"
@@ -155,7 +155,7 @@ resource "oci_core_subnet" "ManagementSubnetAD2" {
 }
 
 resource "oci_core_subnet" "ManagementSubnetAD3" {
-  availability_domain = "${lookup(data.oci_identity_availability_domains.ADs.availability_domains[0],"name")}"
+  availability_domain = "${lookup(data.oci_identity_availability_domains.ADs.availability_domains[2],"name")}"
   cidr_block          = "${lookup(var.network_cidrs, "managementSubnetAD3")}"
   compartment_id      = "${(var.multiple_compartments == "true")  ? var.bastion_compartment_ocid : var.compartment_ocid
 }"
