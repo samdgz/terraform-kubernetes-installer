@@ -144,7 +144,7 @@ resource "oci_core_subnet" "ManagementSubnetAD2" {
   vcn_id              = "${oci_core_virtual_network.CompleteVCN.id}"
 
   # Work around HIL issue #50 using join and use coalesce to pick the first route that is not empty (AD1 first pick)
-  route_table_id             = "${var.control_plane_subnet_access == "private" ? coalesce(join(" ", oci_core_route_table.NATInstanceAD1RouteTable.*.id), join(" ", oci_core_route_table.NATInstanceAD2RouteTable.*.id), join(" ", oci_core_route_table.NATInstanceAD3RouteTable.*.id), oci_core_route_table.PublicRouteTable.id) : oci_core_route_table.PublicRouteTable.id}"
+  route_table_id             = "${var.control_plane_subnet_access == "private" ? coalesce(join(" ", oci_core_route_table.NATInstanceAD2RouteTable.*.id), join(" ", oci_core_route_table.NATInstanceAD1RouteTable.*.id), join(" ", oci_core_route_table.NATInstanceAD3RouteTable.*.id), oci_core_route_table.PublicRouteTable.id) : oci_core_route_table.PublicRouteTable.id}"
   dhcp_options_id            = "${oci_core_virtual_network.CompleteVCN.default_dhcp_options_id}"
   security_list_ids          = ["${concat(list(oci_core_security_list.GlobalSecurityList.id),list(oci_core_security_list.ManagementSecurityList.id), var.additional_management_security_lists_ids)}"]
   prohibit_public_ip_on_vnic = "${var.control_plane_subnet_access == "private" ? "true" : "false"}"
@@ -164,7 +164,7 @@ resource "oci_core_subnet" "ManagementSubnetAD3" {
   vcn_id              = "${oci_core_virtual_network.CompleteVCN.id}"
 
   # Work around HIL issue #50 using join and use coalesce to pick the first route that is not empty (AD1 first pick)
-  route_table_id             = "${var.control_plane_subnet_access == "private" ? coalesce(join(" ", oci_core_route_table.NATInstanceAD1RouteTable.*.id), join(" ", oci_core_route_table.NATInstanceAD2RouteTable.*.id), join(" ", oci_core_route_table.NATInstanceAD3RouteTable.*.id), oci_core_route_table.PublicRouteTable.id) : oci_core_route_table.PublicRouteTable.id}"
+  route_table_id             = "${var.control_plane_subnet_access == "private" ? coalesce(join(" ", oci_core_route_table.NATInstanceAD3RouteTable.*.id), join(" ", oci_core_route_table.NATInstanceAD2RouteTable.*.id), join(" ", oci_core_route_table.NATInstanceAD1RouteTable.*.id), oci_core_route_table.PublicRouteTable.id) : oci_core_route_table.PublicRouteTable.id}"
   dhcp_options_id            = "${oci_core_virtual_network.CompleteVCN.default_dhcp_options_id}"
   security_list_ids          = ["${concat(list(oci_core_security_list.GlobalSecurityList.id),list(oci_core_security_list.ManagementSecurityList.id), var.additional_management_security_lists_ids)}"]
   prohibit_public_ip_on_vnic = "${var.control_plane_subnet_access == "private" ? "true" : "false"}"
