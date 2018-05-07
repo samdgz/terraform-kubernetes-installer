@@ -16,8 +16,10 @@ resource "oci_core_instance" "ManagementInstanceAD1" {
    
   }
 
-  metadata {
+  extended_metadata {
     ssh_authorized_keys = "${var.management_instance_ssh_public_key_openssh}"
+    #Automate management instance configuration with cloud init run at launch time
+    user_data = "${data.template_cloudinit_config.management.rendered}"
   }
 
   timeouts {
@@ -38,8 +40,10 @@ resource "oci_core_instance" "ManagementInstanceAD2" {
     assign_public_ip  = "${(var.control_plane_subnet_access == "private") ? "false" : "true"}"
   }
 
-  metadata {
+  extended_metadata {
     ssh_authorized_keys = "${var.management_instance_ssh_public_key_openssh}"
+    #Automate management instance configuration with cloud init run at launch time
+    user_data = "${data.template_cloudinit_config.management.rendered}"
   }
 
   timeouts {
@@ -60,8 +64,10 @@ resource "oci_core_instance" "ManagementInstanceAD3" {
     assign_public_ip  = "${(var.control_plane_subnet_access == "private") ? "false" : "true"}"
   }
 
-  metadata {
+  extended_metadata {
     ssh_authorized_keys = "${var.management_instance_ssh_public_key_openssh}"
+    #Automate management instance configuration with cloud init run at launch time
+    user_data = "${data.template_cloudinit_config.management.rendered}"
   }
 
   timeouts {

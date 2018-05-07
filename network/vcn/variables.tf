@@ -33,6 +33,33 @@ variable "network_cidrs" {
   }
 }
 
+variable "domain_name" {
+  default = "k8sbmcs.oraclevcn.com"
+}
+
+variable "docker_ver" {
+  default = "17.06.2.ol"
+}
+
+variable "etcd_endpoints" {
+  type    = "string"
+  default = " "
+}
+
+variable "flannel_ver" {
+  default = "v0.7.1"
+}
+
+variable "management_docker_max_log_size" {
+  description = "Maximum size of the management docker container logs"
+  default     = "50m"
+}
+
+variable "management_docker_max_log_files" {
+  description = "Maximum number of management docker container logs to rotate"
+  default     = "5"
+}
+
 variable "tenancy_ocid" {}
 
 variable "control_plane_subnet_access" {

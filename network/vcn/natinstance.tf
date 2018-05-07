@@ -21,7 +21,7 @@ resource "oci_core_instance" "NATInstanceAD1" {
     ssh_authorized_keys = "${var.nat_instance_ssh_public_key_openssh}"
 
     # Automate NAT instance configuration with cloud init run at launch
-    user_data = "${base64encode(file("${path.module}/cloud_init/bootstrap.template.yaml"))}"
+    user_data = "${base64encode(file("${path.module}/cloud_init/nat/bootstrap.template.yaml"))}"
   }
 
   timeouts {
@@ -47,7 +47,7 @@ resource "oci_core_instance" "NATInstanceAD2" {
 
   metadata {
     ssh_authorized_keys = "${var.nat_instance_ssh_public_key_openssh}"
-    user_data           = "${base64encode(file("${path.module}/cloud_init/bootstrap.template.yaml"))}"
+    user_data           = "${base64encode(file("${path.module}/cloud_init/nat/bootstrap.template.yaml"))}"
   }
 
   timeouts {
@@ -72,7 +72,7 @@ resource "oci_core_instance" "NATInstanceAD3" {
 
   metadata {
     ssh_authorized_keys = "${var.nat_instance_ssh_public_key_openssh}"
-    user_data           = "${base64encode(file("${path.module}/cloud_init/bootstrap.template.yaml"))}"
+    user_data           = "${base64encode(file("${path.module}/cloud_init/nat/bootstrap.template.yaml"))}"
   }
 
   timeouts {

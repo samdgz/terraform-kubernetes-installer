@@ -1,0 +1,38 @@
+#cloud-config
+
+bootcmd:
+  # Turn off SELinux
+  - setenforce 0
+
+write_files:
+# setup script
+  - path: "/root/setup.preflight.sh"
+    permissions: "0777"
+    encoding: b64
+    content: |
+      ${setup_preflight_sh_content}
+  - path: "/root/setup.sh"
+    permissions: "0777"
+    encoding: b64
+    content: |
+      ${setup_template_sh_content}
+  - path: "/root/services/flannel.service"
+    permissions: "0600"
+    encoding: b64
+    content: |
+      ${flannel_service_content}
+  - path: "/root/services/cni-bridge.service"
+    permissions: "0600"
+    encoding: b64
+    content: |
+      ${cnibridge_service_content}
+  - path: "/root/services/cni-bridge.sh"
+    permissions: "0600"
+    encoding: b64
+    content: |
+      ${cnibridge_sh_content}
+
+runcmd:
+ - echo "Running init..."
+ - /root/setup.preflight.sh
+ - echo "Finished init."

@@ -274,6 +274,16 @@ variable "master_docker_max_log_files" {
   default     = "5"
 }
 
+variable "management_docker_max_log_size" {
+  description = "Maximum size of the management docker container logs"
+  default     = "50m"
+}
+
+variable "management_docker_max_log_files" {
+  description = "Maximum number of management docker container logs to rotate"
+  default     = "5"
+}
+
 variable "worker_docker_max_log_size" {
   description = "Maximum size of the etcd docker container logs"
   default     = "50m"

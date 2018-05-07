@@ -80,6 +80,12 @@ module "vcn" {
   serviceproxy_instance_ad1_enabled            = "${var.serviceproxy_instance_ad1_enabled}"
   serviceproxy_instance_ad2_enabled            = "${var.serviceproxy_instance_ad2_enabled}"
   serviceproxy_instance_ad3_enabled            = "${var.serviceproxy_instance_ad3_enabled}"
+  domain_name                               = "${var.domain_name}"
+  docker_ver                                = "${var.docker_ver}"
+  flannel_ver                               = "${var.flannel_ver}"
+  management_docker_max_log_size            = "${var.management_docker_max_log_size}"
+  management_docker_max_log_files           = "${var.management_docker_max_log_files}"
+  etcd_endpoints                            = "${var.etcd_endpoints}"
 }
 
 ### Compute Instance(s)

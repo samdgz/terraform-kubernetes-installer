@@ -68,3 +68,55 @@ data "oci_core_private_ips" "NATInstanceAD3PrivateIPDatasource" {
   count   = "${(var.control_plane_subnet_access == "private") && (var.nat_instance_ad3_enabled == "true") ? "1" : "0"}"
   vnic_id = "${data.oci_core_vnic.NATInstanceAD3Vnic.id}"
 }
+
+data "template_file" "management-setup-template" {
+  template = "${file("${path.module}/scripts/management/setup.template.sh")}"
+
+  vars = {
+    domain_name        = "${var.domain_name}"
+    docker_ver         = "${var.docker_ver}"
+    flannel_ver        = "${var.flannel_ver}"
+    docker_max_log_size = "${var.management_docker_max_log_size}"
+    docker_max_log_files = "${var.management_docker_max_log_files}"
+    etcd_endpoints     = "${var.etcd_endpoints}"
+  }
+}
+
+data "template_file" "management-setup-preflight" {
+  template = "${file("${path.module}/scripts/management/setup.preflight.sh")}"
+}
+
+data "template_file" "flannel-service" {
+  template = "${file("${path.module}/scripts/management/flannel.service")}"
+}
+
+data "template_file" "cnibridge-service" {
+  template = "${file("${path.module}/scripts/management/cni-bridge.service")}"
+}
+
+data "template_file" "cnibridge-sh" {
+  template = "${file("${path.module}/scripts/management/cni-bridge.sh")}"
+}
+
+data "template_file" "management_cloud_init_file" {
+  template = "${file("${path.module}/cloud_init/management/bootstrap.template.yaml")}"
+
+  vars = {
+    setup_preflight_sh_content = "${base64encode(data.template_file.management-setup-preflight.rendered)}"
+    setup_template_sh_content  = "${base64encode(data.template_file.management-setup-template.rendered)}"
+    flannel_service_content    = "${base64encode(data.template_file.flannel-service.rendered)}"
+    cnibridge_service_content  = "${base64encode(data.template_file.cnibridge-service.rendered)}"
+    cnibridge_sh_content       = "${base64encode(data.template_file.cnibridge-sh.rendered)}"
+  }
+}
+
+data "template_cloudinit_config" "management" {
+  gzip          = true
+  base64_encode = true
+
+  part {
+    filename     = "bootstrap.yaml"
+    content_type = "text/cloud-config"
+    content      = "${data.template_file.management_cloud_init_file.rendered}"
+  }
+}
