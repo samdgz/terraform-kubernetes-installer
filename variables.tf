@@ -106,6 +106,16 @@ variable "additional_bastion_security_lists_ids" {
   default = []
 }
 
+variable "additional_management_security_lists_ids" {
+  type    = "list"
+  default = []
+}
+
+variable "additional_serviceproxy_security_lists_ids" {
+  type    = "list"
+  default = []
+}
+
 # Instance shape, e.g. VM.Standard1.1, VM.Standard1.2, VM.Standard1.4, ..., BM.Standard1.36, ...
 
 variable "etcdShape" {
