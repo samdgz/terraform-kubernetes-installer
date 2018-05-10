@@ -9,6 +9,21 @@ data "oci_core_images" "ImageOCID" {
   display_name   = "${var.nat_instance_oracle_linux_image_name}"
 }
 
+data "oci_core_images" "ManagementImageOCID" {
+  compartment_id = "${var.compartment_ocid}"
+  display_name   = "${var.management_instance_oracle_linux_image_name}"
+}
+
+data "oci_core_images" "BastionImageOCID" {
+  compartment_id = "${var.compartment_ocid}"
+  display_name   = "${var.bastion_instance_oracle_linux_image_name}"
+}
+
+data "oci_core_images" "ServiceProxyImageOCID" {
+  compartment_id = "${var.compartment_ocid}"
+  display_name   = "${var.serviceproxy_instance_oracle_linux_image_name}"
+}
+
 # Gets a list of VNIC attachments on the NAT instance in AD 1
 data "oci_core_vnic_attachments" "NATInstanceAD1Vnics" {
   count               = "${(var.control_plane_subnet_access == "private") && (var.nat_instance_ad1_enabled == "true") ? "1" : "0"}"

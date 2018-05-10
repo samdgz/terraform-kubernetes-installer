@@ -7,7 +7,7 @@ resource "oci_core_instance" "ManagementInstanceAD1" {
   availability_domain = "${lookup(data.oci_identity_availability_domains.ADs.availability_domains[0],"name")}"
   compartment_id      = "${(var.multiple_compartments == "true")  ? var.bastion_compartment_ocid : var.compartment_ocid}"
   display_name        = "${var.label_prefix}management-ad1"
-  image               = "${lookup(data.oci_core_images.ImageOCID.images[0], "id")}"
+  image               = "${lookup(data.oci_core_images.ManagementImageOCID.images[0], "id")}"
   shape               = "${var.management_instance_shape}"
 
   create_vnic_details {
@@ -32,7 +32,7 @@ resource "oci_core_instance" "ManagementInstanceAD2" {
   availability_domain = "${lookup(data.oci_identity_availability_domains.ADs.availability_domains[1],"name")}"
   compartment_id      = "${(var.multiple_compartments == "true")  ? var.bastion_compartment_ocid : var.compartment_ocid}"
   display_name        = "${var.label_prefix}management-ad2"
-  image               = "${lookup(data.oci_core_images.ImageOCID.images[0], "id")}"
+  image               = "${lookup(data.oci_core_images.ManagementImageOCID.images[0], "id")}"
   shape               = "${var.management_instance_shape}"
 
   create_vnic_details {
@@ -56,7 +56,7 @@ resource "oci_core_instance" "ManagementInstanceAD3" {
   availability_domain = "${lookup(data.oci_identity_availability_domains.ADs.availability_domains[2],"name")}"
   compartment_id      = "${(var.multiple_compartments == "true")  ? var.bastion_compartment_ocid : var.compartment_ocid}"
   display_name        = "${var.label_prefix}management-ad3"
-  image               = "${lookup(data.oci_core_images.ImageOCID.images[0], "id")}"
+  image               = "${lookup(data.oci_core_images.ManagementImageOCID.images[0], "id")}"
   shape               = "${var.management_instance_shape}"
 
   create_vnic_details {

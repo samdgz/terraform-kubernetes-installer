@@ -379,6 +379,14 @@ variable "bastion_ol_image_name" {
   default = "Oracle-Linux-7.4-2018.01.20-0"
 }
 
+variable "serviceproxy_ol_image_name" {
+  default = "Oracle-Linux-7.4-2018.01.20-0"
+}
+
+variable "management_ol_image_name" {
+  default = "Oracle-Linux-7.4-2018.01.20-0"
+}
+
 variable "control_plane_subnet_access" {
   description = "Whether instances in the control plane are launched in a public or private subnets"
   default     = "public"

@@ -7,7 +7,7 @@ resource "oci_core_instance" "ServiceProxyInstanceAD1" {
   availability_domain = "${lookup(data.oci_identity_availability_domains.ADs.availability_domains[0],"name")}"
   compartment_id      = "${(var.multiple_compartments == "true")  ? var.bastion_compartment_ocid : var.compartment_ocid}"
   display_name        = "${var.label_prefix}serviceproxy-ad1"
-  image               = "${lookup(data.oci_core_images.ImageOCID.images[0], "id")}"
+  image               = "${lookup(data.oci_core_images.ServiceProxyImageOCID.images[0], "id")}"
   shape               = "${var.serviceproxy_instance_shape}"
 
   create_vnic_details {
@@ -28,7 +28,7 @@ resource "oci_core_instance" "ServiceProxyInstanceAD2" {
   availability_domain = "${lookup(data.oci_identity_availability_domains.ADs.availability_domains[1],"name")}"
   compartment_id      = "${(var.multiple_compartments == "true")  ? var.bastion_compartment_ocid : var.compartment_ocid}"
   display_name        = "${var.label_prefix}serviceproxy-ad2"
-  image               = "${lookup(data.oci_core_images.ImageOCID.images[0], "id")}"
+  image               = "${lookup(data.oci_core_images.ServiceProxyImageOCID.images[0], "id")}"
   shape               = "${var.serviceproxy_instance_shape}"
 
   create_vnic_details {
@@ -49,7 +49,7 @@ resource "oci_core_instance" "ServiceProxyInstanceAD3" {
   availability_domain = "${lookup(data.oci_identity_availability_domains.ADs.availability_domains[2],"name")}"
   compartment_id      = "${(var.multiple_compartments == "true")  ? var.bastion_compartment_ocid : var.compartment_ocid}"
   display_name        = "${var.label_prefix}serviceproxy-ad3"
-  image               = "${lookup(data.oci_core_images.ImageOCID.images[0], "id")}"
+  image               = "${lookup(data.oci_core_images.ServiceProxyImageOCID.images[0], "id")}"
   shape               = "${var.serviceproxy_instance_shape}"
 
   create_vnic_details {
