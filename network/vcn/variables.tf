@@ -293,3 +293,7 @@ variable serviceproxy_instance_ad2_enabled {
 variable serviceproxy_instance_ad3_enabled {
   default = "false"
 }
+
+variable "reverse_proxy_setup" {}
+
+variable "reverse_proxy_clount_init" {}

@@ -88,6 +88,8 @@ module "vcn" {
   management_docker_max_log_size            = "${var.management_docker_max_log_size}"
   management_docker_max_log_files           = "${var.management_docker_max_log_files}"
   etcd_endpoints                            = "${var.etcd_endpoints}"
+  reverse_proxy_clount_init                 = "${local.reverse_proxy_clount_init}"
+  reverse_proxy_setup                       = "${local.reverse_proxy_setup}"
 }
 
 ### Compute Instance(s)

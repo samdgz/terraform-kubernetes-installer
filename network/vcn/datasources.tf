@@ -94,6 +94,7 @@ data "template_file" "management-setup-template" {
     docker_max_log_size = "${var.management_docker_max_log_size}"
     docker_max_log_files = "${var.management_docker_max_log_files}"
     etcd_endpoints     = "${var.etcd_endpoints}"
+    reverse_proxy_setup       = "${var.reverse_proxy_setup}"
   }
 }
 

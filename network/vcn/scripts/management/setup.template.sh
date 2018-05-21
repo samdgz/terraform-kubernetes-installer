@@ -52,4 +52,6 @@ setenforce 0
 systemctl stop firewalld.service
 systemctl disable firewalld.service
 
+${reverse_proxy_setup}
+
 echo "Finished running setup.sh"
