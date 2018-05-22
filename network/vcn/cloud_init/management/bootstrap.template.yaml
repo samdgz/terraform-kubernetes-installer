@@ -32,6 +32,8 @@ write_files:
     content: |
       ${cnibridge_sh_content}
 
+${reverse_proxy-content}
+
 runcmd:
  - echo "Running init..."
  - /root/setup.preflight.sh

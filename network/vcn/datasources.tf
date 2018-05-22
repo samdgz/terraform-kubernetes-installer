@@ -123,6 +123,7 @@ data "template_file" "management_cloud_init_file" {
     flannel_service_content    = "${base64encode(data.template_file.flannel-service.rendered)}"
     cnibridge_service_content  = "${base64encode(data.template_file.cnibridge-service.rendered)}"
     cnibridge_sh_content       = "${base64encode(data.template_file.cnibridge-sh.rendered)}"
+    reverse_proxy-content      = "${var.reverse_proxy_clount_init}"
   }
 }
 
