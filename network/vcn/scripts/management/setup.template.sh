@@ -52,7 +52,7 @@ setenforce 0
 systemctl stop firewalld.service
 systemctl disable firewalld.service
 
-sudo sed -i s/0.0.0.0/127.0.0.1/g /etc/ngnix/nginx.conf
+sudo sed -i s/0.0.0.0/127.0.0.1/g /etc/nginx/nginx.conf
 ${reverse_proxy_setup}
 
 echo "Finished running setup.sh"
