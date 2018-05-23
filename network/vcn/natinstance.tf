@@ -6,10 +6,9 @@ resource "oci_core_instance" "NATInstanceAD1" {
   count               = "${(var.control_plane_subnet_access == "private") && (var.nat_instance_ad1_enabled == "true") ? "1" : "0"}"
   availability_domain = "${lookup(data.oci_identity_availability_domains.ADs.availability_domains[0],"name")}"
   compartment_id      = "${(var.multiple_compartments == "true")  ? var.nat_compartment_ocid : var.compartment_ocid}"
-  display_name        = "${(var.region == "us-ashburn-1") ? "ociash1-${var.regulatory_domain}-patronus-nat-01" : "ociphx1-${var.regulatory_domain}-patronus-nat-01"}"
+  display_name        = "${var.label_prefix}nat-ad1"
   image               = "${lookup(data.oci_core_images.ImageOCID.images[0], "id")}"
   shape               = "${var.nat_instance_shape}"
-  hostname_label      = "${(var.region == "us-ashburn-1") ? "ociash1-${var.regulatory_domain}-patronus-nat-01" : "ociphx1-${var.regulatory_domain}-patronus-nat-01"}"
 
   create_vnic_details {
     subnet_id = "${(var.control_plane_subnet_access == "private") && (var.dedicated_nat_subnets == "true") ? "${element(concat(oci_core_subnet.NATSubnetAD1.*.id,list("")),0)}" : "${oci_core_subnet.PublicSubnetAD1.id}"}"
@@ -34,10 +33,10 @@ resource "oci_core_instance" "NATInstanceAD2" {
   count               = "${(var.control_plane_subnet_access == "private") && (var.nat_instance_ad2_enabled == "true") ? "1" : "0"}"
   availability_domain = "${lookup(data.oci_identity_availability_domains.ADs.availability_domains[1],"name")}"
   compartment_id      = "${(var.multiple_compartments == "true")  ? var.nat_compartment_ocid : var.compartment_ocid}"
-  display_name        = "${(var.region == "us-ashburn-1") ? "ociash1-${var.regulatory_domain}-patronus-nat-02" : "ociphx1-${var.regulatory_domain}-patronus-nat-02"}"
+  display_name        = "${var.label_prefix}nat-ad1"
+  display_name        = "${var.label_prefix}nat-ad2"
   image               = "${lookup(data.oci_core_images.ImageOCID.images[0], "id")}"
   shape               = "${var.nat_instance_shape}"
-  hostname_label      = "${(var.region == "us-ashburn-1") ? "ociash1-${var.regulatory_domain}-patronus-nat-02" : "ociphx1-${var.regulatory_domain}-patronus-nat-02"}"
 
   create_vnic_details {
     subnet_id = "${(var.control_plane_subnet_access == "private") && (var.dedicated_nat_subnets == "true") ? "${element(concat(oci_core_subnet.NATSubnetAD2.*.id,list("")),0)}" : "${oci_core_subnet.PublicSubnetAD2.id}"}"
@@ -60,10 +59,9 @@ resource "oci_core_instance" "NATInstanceAD3" {
   count               = "${(var.control_plane_subnet_access == "private") && (var.nat_instance_ad3_enabled == "true") ? "1" : "0"}"
   availability_domain = "${lookup(data.oci_identity_availability_domains.ADs.availability_domains[2],"name")}"
   compartment_id      = "${(var.multiple_compartments == "true")  ? var.nat_compartment_ocid : var.compartment_ocid}"
-  display_name        = "${(var.region == "us-ashburn-1") ? "ociash1-${var.regulatory_domain}-patronus-nat-03" : "ociphx1-${var.regulatory_domain}-patronus-nat-03"}"
+  display_name        = "${var.label_prefix}nat-ad3"
   image               = "${lookup(data.oci_core_images.ImageOCID.images[0], "id")}"
   shape               = "${var.nat_instance_shape}"
-  hostname_label      = "${(var.region == "us-ashburn-1") ? "ociash1-${var.regulatory_domain}-patronus-nat-03" : "ociphx1-${var.regulatory_domain}-patronus-nat-03"}"
 
   create_vnic_details {
     subnet_id = "${(var.control_plane_subnet_access == "private") && (var.dedicated_nat_subnets == "true") ? "${element(concat(oci_core_subnet.NATSubnetAD3.*.id,list("")),0)}" : "${element(concat(oci_core_subnet.PublicSubnetAD3.*.id,list("")),0)}"}"

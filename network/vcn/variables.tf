@@ -60,10 +60,6 @@ variable "management_docker_max_log_files" {
   default     = "5"
 }
 
-variable "region" {
-  default = "us-phoenix-1"
-}
-
 variable "tenancy_ocid" {}
 
 variable "control_plane_subnet_access" {
@@ -301,7 +297,3 @@ variable serviceproxy_instance_ad3_enabled {
 variable "reverse_proxy_setup" {}
 
 variable "reverse_proxy_clount_init" {}
-
-variable "regulatory_domain" {
-  default = "p"
-}

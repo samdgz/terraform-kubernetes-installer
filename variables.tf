@@ -58,10 +58,6 @@ variable "region" {
   default = "us-phoenix-1"
 }
 
-variable "regulatory_domain" {
-  default = "p"
-}
-
 variable "vcn_dns_name" {
   default = "k8sbmcs"
 }
