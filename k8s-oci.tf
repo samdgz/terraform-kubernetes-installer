@@ -90,6 +90,9 @@ module "vcn" {
   etcd_endpoints                            = "${var.etcd_endpoints}"
   reverse_proxy_clount_init                 = "${local.reverse_proxy_clount_init}"
   reverse_proxy_setup                       = "${local.reverse_proxy_setup}"
+  regulatory_domain                         = "${var.regulatory_domain}"
+  product_name                              = "${var.product_name}"
+  region                                    = "${var.region}"
 }
 
 ### Compute Instance(s)
