@@ -17,6 +17,8 @@ resource "oci_core_instance" "ServiceProxyInstanceAD1" {
 
   metadata {
     ssh_authorized_keys = "${var.serviceproxy_instance_ssh_public_key_openssh}"
+    # Automate ServiceProxy instance configuration with cloud init run at launch
+    user_data = "${base64encode(file("${path.module}/cloud_init/serviceproxy/bootstrap.template.yaml"))}"
   }
 
   timeouts {
@@ -39,6 +41,8 @@ resource "oci_core_instance" "ServiceProxyInstanceAD2" {
 
   metadata {
     ssh_authorized_keys = "${var.serviceproxy_instance_ssh_public_key_openssh}"
+    # Automate ServiceProxy instance configuration with cloud init run at launch
+    user_data = "${base64encode(file("${path.module}/cloud_init/serviceproxy/bootstrap.template.yaml"))}"
   }
 
   timeouts {
@@ -61,6 +65,8 @@ resource "oci_core_instance" "ServiceProxyInstanceAD3" {
 
   metadata {
     ssh_authorized_keys = "${var.serviceproxy_instance_ssh_public_key_openssh}"
+    # Automate ServiceProxy instance configuration with cloud init run at launch
+    user_data = "${base64encode(file("${path.module}/cloud_init/serviceproxy/bootstrap.template.yaml"))}"
   }
 
   timeouts {

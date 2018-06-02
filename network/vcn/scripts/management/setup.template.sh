@@ -55,4 +55,7 @@ systemctl disable firewalld.service
 sudo sed -i s/0.0.0.0/127.0.0.1/g /etc/nginx/nginx.conf
 ${reverse_proxy_setup}
 
+sudo sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
+sudo systemctl restart sshd
+
 echo "Finished running setup.sh"

@@ -232,5 +232,8 @@ systemctl start kubelet
 
 systemctl restart flannel
 
+sudo sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
+sudo systemctl restart sshd
+
 ######################################
 echo "Finished running setup.sh"

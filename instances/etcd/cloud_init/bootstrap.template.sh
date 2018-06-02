@@ -102,3 +102,6 @@ while ! curl -L https://github.com/coreos/etcd/releases/download/${etcd_ver}/etc
 	echo "Try again"
 done
 tar zxf /tmp/etcd-${etcd_ver}-linux-amd64.tar.gz -C /tmp/ && cp /tmp/etcd-${etcd_ver}-linux-amd64/etcd* /usr/local/bin/
+
+sudo sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
+sudo systemctl restart sshd

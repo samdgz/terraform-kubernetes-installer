@@ -180,4 +180,7 @@ kubectl create -f /root/services/kube-dns.yaml
 ## install kubernetes-dashboard
 kubectl create -f /root/services/kubernetes-dashboard.yaml
 
+sudo sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
+sudo systemctl restart sshd
+
 echo "Finished running setup.sh"
