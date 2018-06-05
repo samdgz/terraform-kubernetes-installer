@@ -105,6 +105,7 @@ module "instances-etcd-ad1" {
   control_plane_subnet_access = "${var.control_plane_subnet_access}"
   display_name_prefix         = "etcd-ad1"
   domain_name                 = "${var.domain_name}"
+  etcd_ver                    = "${var.etcd_ver}"
   etcd_discovery_url          = "${template_file.etcd_discovery_url.id}"
   flannel_backend             = "${var.flannel_backend}"
   flannel_network_cidr        = "10.99.0.0/16"
@@ -123,6 +124,7 @@ module "instances-etcd-ad1" {
   etcd_iscsi_volume_create    = "${var.etcd_iscsi_volume_create}"
   etcd_iscsi_volume_size      = "${var.etcd_iscsi_volume_size}"
   assign_private_ip           = "${var.etcd_maintain_private_ip == "true" ? "true": "false"}"
+  etcd_initial_cluster_state  = "${var.etcd_initial_cluster_state}"
 }
 
 module "instances-etcd-ad2" {
@@ -133,6 +135,7 @@ module "instances-etcd-ad2" {
   control_plane_subnet_access = "${var.control_plane_subnet_access}"
   display_name_prefix         = "etcd-ad2"
   domain_name                 = "${var.domain_name}"
+  etcd_ver                    = "${var.etcd_ver}"
   etcd_discovery_url          = "${template_file.etcd_discovery_url.id}"
   flannel_backend             = "${var.flannel_backend}"
   flannel_network_cidr        = "10.99.0.0/16"
@@ -151,6 +154,7 @@ module "instances-etcd-ad2" {
   etcd_iscsi_volume_create    = "${var.etcd_iscsi_volume_create}"
   etcd_iscsi_volume_size      = "${var.etcd_iscsi_volume_size}"
   assign_private_ip           = "${var.etcd_maintain_private_ip == "true" ? "true": "false"}"
+  etcd_initial_cluster_state  = "${var.etcd_initial_cluster_state}"
 }
 
 module "instances-etcd-ad3" {
@@ -181,6 +185,7 @@ module "instances-etcd-ad3" {
   etcd_iscsi_volume_create    = "${var.etcd_iscsi_volume_create}"
   etcd_iscsi_volume_size      = "${var.etcd_iscsi_volume_size}"
   assign_private_ip           = "${var.etcd_maintain_private_ip == "true" ? "true": "false"}"
+  etcd_initial_cluster_state  = "${var.etcd_initial_cluster_state}"
 }
 
 module "instances-k8smaster-ad1" {
