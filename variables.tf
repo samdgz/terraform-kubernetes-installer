@@ -355,10 +355,6 @@ variable "etcd_initial_cluster_state" {
   default = "new"
 }
 
-variable "etcd_initial_cluster" {
-  default = ""
-}
-
 variable "flannel_ver" {
   default = "v0.7.1"
 }

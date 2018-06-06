@@ -60,37 +60,20 @@ if [ -n "$${iqn}" ]; then
     mount -t xfs "/dev/disk/by-path/ip-169.254.2.2:3260-iscsi-$${iqn}-lun-1"  /etcd
 fi
 
-if [ "${etcd_initial_cluster_state}" = "existing" ]; then
-  docker run -d \
-          --restart=always \
-	  -p 2380:2380 -p 2379:2379 \
-	  -v /etc/ssl/certs/ca-bundle.crt:/etc/ssl/certs/ca-bundle.crt \
-	  -v /etcd:/$HOSTNAME.etcd \
-	  --net=host \
-	  quay.io/coreos/etcd:${etcd_ver} \
-	  /usr/local/bin/etcd \
-	  -name $HOSTNAME \
-	  -advertise-client-urls http://$IP_LOCAL:2379 \
-	  -listen-client-urls http://$IP_LOCAL:2379,http://127.0.0.1:2379 \
-	  -listen-peer-urls http://0.0.0.0:2380 \
-	  -initial-cluster-state ${etcd_initial_cluster_state} \
-	  -initial-cluster ${etcd_initial_cluster}
-else
-  docker run -d \
-          --restart=always \
-	  -p 2380:2380 -p 2379:2379 \
-	  -v /etc/ssl/certs/ca-bundle.crt:/etc/ssl/certs/ca-bundle.crt \
-	  -v /etcd:/$HOSTNAME.etcd \
-	  --net=host \
-	  quay.io/coreos/etcd:${etcd_ver} \
-	  /usr/local/bin/etcd \
-	  -name $HOSTNAME \
-	  -advertise-client-urls http://$IP_LOCAL:2379 \
-	  -listen-client-urls http://$IP_LOCAL:2379,http://127.0.0.1:2379 \
-	  -listen-peer-urls http://0.0.0.0:2380 \
-	  -initial-cluster-state ${etcd_initial_cluster_state} \
-	  -discovery ${etcd_discovery_url}
-fi
+docker run -d \
+        --restart=always \
+	-p 2380:2380 -p 2379:2379 \
+	-v /etc/ssl/certs/ca-bundle.crt:/etc/ssl/certs/ca-bundle.crt \
+	-v /etcd:/$HOSTNAME.etcd \
+	--net=host \
+	quay.io/coreos/etcd:${etcd_ver} \
+	/usr/local/bin/etcd \
+	-name $HOSTNAME \
+	-advertise-client-urls http://$IP_LOCAL:2379 \
+	-listen-client-urls http://$IP_LOCAL:2379,http://127.0.0.1:2379 \
+	-listen-peer-urls http://0.0.0.0:2380 \
+	-initial-cluster-state ${etcd_initial_cluster_state} \
+	-discovery ${etcd_discovery_url}
 
 # Generate a flannel configuration JSON that we will store into etcd using curl.
 cat >/tmp/flannel-network.json <<EOF
