@@ -17,8 +17,6 @@ resource "oci_core_instance" "BastionInstanceAD1" {
 
   metadata {
     ssh_authorized_keys = "${var.bastion_instance_ssh_public_key_openssh}"
-    # Automate Bastion instance configuration with cloud init run at launch
-    user_data = "${base64encode(file("${path.module}/cloud_init/bastion/bootstrap.template.yaml"))}"
   }
 
   timeouts {
@@ -41,8 +39,6 @@ resource "oci_core_instance" "BastionInstanceAD2" {
 
   metadata {
     ssh_authorized_keys = "${var.bastion_instance_ssh_public_key_openssh}"
-    # Automate Bastion instance configuration with cloud init run at launch
-    user_data = "${base64encode(file("${path.module}/cloud_init/bastion/bootstrap.template.yaml"))}"
   }
 
   timeouts {
@@ -65,8 +61,6 @@ resource "oci_core_instance" "BastionInstanceAD3" {
 
   metadata {
     ssh_authorized_keys = "${var.bastion_instance_ssh_public_key_openssh}"
-    # Automate Bastion instance configuration with cloud init run at launch
-    user_data = "${base64encode(file("${path.module}/cloud_init/bastion/bootstrap.template.yaml"))}"
   }
 
   timeouts {

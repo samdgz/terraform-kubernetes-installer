@@ -13,5 +13,3 @@ runcmd:
   - firewall-offline-cmd --direct --add-rule ipv4 filter FORWARD 0 -i ens3 -j ACCEPT
   - /bin/systemctl restart firewalld
   - sysctl -p /etc/sysctl.d/98-ip-forward.conf
-  - sed -i -e 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
-  - restart ssh
