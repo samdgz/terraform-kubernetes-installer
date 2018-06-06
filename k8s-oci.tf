@@ -125,6 +125,7 @@ module "instances-etcd-ad1" {
   etcd_iscsi_volume_size      = "${var.etcd_iscsi_volume_size}"
   assign_private_ip           = "${var.etcd_maintain_private_ip == "true" ? "true": "false"}"
   etcd_initial_cluster_state  = "${var.etcd_initial_cluster_state}"
+  etcd_initial_cluster        = "${var.etcd_initial_cluster}"
 }
 
 module "instances-etcd-ad2" {
@@ -155,6 +156,7 @@ module "instances-etcd-ad2" {
   etcd_iscsi_volume_size      = "${var.etcd_iscsi_volume_size}"
   assign_private_ip           = "${var.etcd_maintain_private_ip == "true" ? "true": "false"}"
   etcd_initial_cluster_state  = "${var.etcd_initial_cluster_state}"
+  etcd_initial_cluster        = "${var.etcd_initial_cluster}"
 }
 
 module "instances-etcd-ad3" {
@@ -186,6 +188,7 @@ module "instances-etcd-ad3" {
   etcd_iscsi_volume_size      = "${var.etcd_iscsi_volume_size}"
   assign_private_ip           = "${var.etcd_maintain_private_ip == "true" ? "true": "false"}"
   etcd_initial_cluster_state  = "${var.etcd_initial_cluster_state}"
+  etcd_initial_cluster        = "${var.etcd_initial_cluster}"
 }
 
 module "instances-k8smaster-ad1" {

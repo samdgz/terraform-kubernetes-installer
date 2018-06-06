@@ -35,6 +35,10 @@ variable "etcd_initial_cluster_state" {
   default = "new"
 }
 
+variable "etcd_initial_cluster" {
+  default = ""
+}
+
 variable "tenancy_ocid" {}
 variable "flannel_network_cidr" {}
 variable "flannel_network_subnetlen" {}
