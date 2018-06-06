@@ -18,6 +18,7 @@ data "template_file" "etcd-bootstrap" {
     docker_ver                = "${var.docker_ver}"
     etcd_ver                  = "${var.etcd_ver}"
     etcd_initial_cluster_state = "${var.etcd_initial_cluster_state}"
+    etcd_initial_cluster      = "${var.etcd_initial_cluster}"
     flannel_network_cidr      = "${var.flannel_network_cidr}"
     flannel_network_subnetlen = "${var.flannel_network_subnetlen}"
     flannel_backend           = "${var.flannel_backend}"
