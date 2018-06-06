@@ -72,7 +72,6 @@ docker run -d \
 	-advertise-client-urls http://$IP_LOCAL:2379 \
 	-listen-client-urls http://$IP_LOCAL:2379,http://127.0.0.1:2379 \
 	-listen-peer-urls http://0.0.0.0:2380 \
-	-initial-cluster-state ${etcd_initial_cluster_state} \
 	-discovery ${etcd_discovery_url}
 
 # Generate a flannel configuration JSON that we will store into etcd using curl.
