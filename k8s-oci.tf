@@ -93,6 +93,7 @@ module "vcn" {
   regulatory_domain                         = "${var.regulatory_domain}"
   product_name                              = "${var.product_name}"
   region                                    = "${var.region}"
+  assign_private_ip                         = "true"
 }
 
 ### Compute Instance(s)
@@ -333,6 +334,10 @@ module "instances-k8sworker-ad1" {
   worker_iscsi_volume_create  = "${var.worker_iscsi_volume_create}"
   worker_iscsi_volume_size    = "${var.worker_iscsi_volume_size}"
   worker_iscsi_volume_mount   = "${var.worker_iscsi_volume_mount}"
+  assign_private_ip           = "true"
+  network_cidrs               = "${var.network_cidrs}"
+  subnet_name                 = "workerSubnetAD1"
+  control_plane_subnet_access = "${var.control_plane_subnet_access}"
 }
 
 module "instances-k8sworker-ad2" {
@@ -369,6 +374,10 @@ module "instances-k8sworker-ad2" {
   worker_iscsi_volume_create  = "${var.worker_iscsi_volume_create}"
   worker_iscsi_volume_size    = "${var.worker_iscsi_volume_size}"
   worker_iscsi_volume_mount   = "${var.worker_iscsi_volume_mount}"
+  assign_private_ip           = "true"
+  network_cidrs               = "${var.network_cidrs}"
+  subnet_name                 = "workerSubnetAD2"
+  control_plane_subnet_access = "${var.control_plane_subnet_access}"
 }
 
 module "instances-k8sworker-ad3" {
@@ -405,6 +414,10 @@ module "instances-k8sworker-ad3" {
   worker_iscsi_volume_create  = "${var.worker_iscsi_volume_create}"
   worker_iscsi_volume_size    = "${var.worker_iscsi_volume_size}"
   worker_iscsi_volume_mount   = "${var.worker_iscsi_volume_mount}"
+  assign_private_ip           = "true"
+  network_cidrs               = "${var.network_cidrs}"
+  subnet_name                 = "workerSubnetAD3"
+  control_plane_subnet_access = "${var.control_plane_subnet_access}"
 }
 
 ### Load Balancers

@@ -309,3 +309,8 @@ variable "regulatory_domain" {
 variable "product_name" {
   default = "patronus"
 }
+
+variable "assign_private_ip" {
+  description = "Assign a static private ip based on CIDR block for that AD"
+  default = false
+}

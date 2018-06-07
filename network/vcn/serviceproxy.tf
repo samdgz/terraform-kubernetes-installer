@@ -13,6 +13,10 @@ resource "oci_core_instance" "ServiceProxyInstanceAD1" {
 
   create_vnic_details {
     subnet_id = "${(var.control_plane_subnet_access == "private") && (var.dedicated_bastion_subnets == "true") ? "${element(concat(oci_core_subnet.ServiceProxySubnetAD1.*.id,list("")),0)}" : "${oci_core_subnet.PublicSubnetAD1.id}"}"
+    display_name        = "${(var.region == "us-ashburn-1") ? "ociash1-${var.regulatory_domain}-${var.product_name}-lbp-01" : "ociphx1-${var.regulatory_domain}-${var.product_name}-lbp-01"}"
+    hostname_label      = "${(var.region == "us-ashburn-1") ? "ociash1-${var.regulatory_domain}-${var.product_name}-lbp-01" : "ociphx1-${var.regulatory_domain}-${var.product_name}-lbp-01"}"
+    assign_public_ip = "${(var.control_plane_subnet_access == "private") ? "false" : "true"}"
+    private_ip       = "${var.assign_private_ip == "true" ? cidrhost(lookup(var.network_cidrs,"serviceProxySubnetAD1"), count.index+2) : ""}"
   }
 
   metadata {
@@ -37,6 +41,10 @@ resource "oci_core_instance" "ServiceProxyInstanceAD2" {
 
   create_vnic_details {
     subnet_id = "${(var.control_plane_subnet_access == "private") && (var.dedicated_bastion_subnets == "true") ? "${element(concat(oci_core_subnet.ServiceProxySubnetAD2.*.id,list("")),0)}" : "${oci_core_subnet.PublicSubnetAD2.id}"}"
+    display_name        = "${(var.region == "us-ashburn-1") ? "ociash1-${var.regulatory_domain}-${var.product_name}-lbp-02" : "ociphx1-${var.regulatory_domain}-${var.product_name}-lbp-02"}"
+    hostname_label      = "${(var.region == "us-ashburn-1") ? "ociash1-${var.regulatory_domain}-${var.product_name}-lbp-02" : "ociphx1-${var.regulatory_domain}-${var.product_name}-lbp-02"}"
+    assign_public_ip = "${(var.control_plane_subnet_access == "private") ? "false" : "true"}"
+    private_ip       = "${var.assign_private_ip == "true" ? cidrhost(lookup(var.network_cidrs,"serviceProxySubnetAD2"), count.index+2) : ""}"
   }
 
   metadata {
@@ -61,6 +69,10 @@ resource "oci_core_instance" "ServiceProxyInstanceAD3" {
 
   create_vnic_details {
     subnet_id = "${(var.control_plane_subnet_access == "private") && (var.dedicated_bastion_subnets == "true") ? "${element(concat(oci_core_subnet.ServiceProxySubnetAD3.*.id,list("")),0)}" : "${element(concat(oci_core_subnet.PublicSubnetAD3.*.id,list("")),0)}"}"
+    display_name        = "${(var.region == "us-ashburn-1") ? "ociash1-${var.regulatory_domain}-${var.product_name}-lbp-03" : "ociphx1-${var.regulatory_domain}-${var.product_name}-lbp-03"}"
+    hostname_label      = "${(var.region == "us-ashburn-1") ? "ociash1-${var.regulatory_domain}-${var.product_name}-lbp-03" : "ociphx1-${var.regulatory_domain}-${var.product_name}-lbp-03"}"
+    assign_public_ip = "${(var.control_plane_subnet_access == "private") ? "false" : "true"}"
+    private_ip       = "${var.assign_private_ip == "true" ? cidrhost(lookup(var.network_cidrs,"serviceProxySubnetAD3"), count.index+2) : ""}"
   }
 
   metadata {

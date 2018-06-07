@@ -12,8 +12,9 @@ resource "oci_core_instance" "ManagementInstanceAD1" {
 
   create_vnic_details {
     subnet_id = "${(var.control_plane_subnet_access == "private") && (var.dedicated_bastion_subnets == "true") ? "${element(concat(oci_core_subnet.ManagementSubnetAD1.*.id,list("")),0)}" : "${oci_core_subnet.PublicSubnetAD1.id}"}"
-    assign_public_ip  = "${(var.control_plane_subnet_access == "private") ? "false" : "true"}"
-   
+    display_name        = "${var.label_prefix}management-ad1"
+    assign_public_ip = "${(var.control_plane_subnet_access == "private") ? "false" : "true"}"
+    private_ip       = "${var.assign_private_ip == "true" ? cidrhost(lookup(var.network_cidrs,"managementSubnetAD1"), count.index+2) : ""}"
   }
 
   extended_metadata {
@@ -37,7 +38,9 @@ resource "oci_core_instance" "ManagementInstanceAD2" {
 
   create_vnic_details {
     subnet_id = "${(var.control_plane_subnet_access == "private") && (var.dedicated_bastion_subnets == "true") ? "${element(concat(oci_core_subnet.ManagementSubnetAD2.*.id,list("")),0)}" : "${oci_core_subnet.PublicSubnetAD2.id}"}"
-    assign_public_ip  = "${(var.control_plane_subnet_access == "private") ? "false" : "true"}"
+    display_name        = "${var.label_prefix}management-ad2"
+    assign_public_ip = "${(var.control_plane_subnet_access == "private") ? "false" : "true"}"
+    private_ip       = "${var.assign_private_ip == "true" ? cidrhost(lookup(var.network_cidrs,"managementSubnetAD2"), count.index+2) : ""}"
   }
 
   extended_metadata {
@@ -61,7 +64,9 @@ resource "oci_core_instance" "ManagementInstanceAD3" {
 
   create_vnic_details {
     subnet_id = "${(var.control_plane_subnet_access == "private") && (var.dedicated_bastion_subnets == "true") ? "${element(concat(oci_core_subnet.ManagementSubnetAD3.*.id,list("")),0)}" : "${element(concat(oci_core_subnet.PublicSubnetAD3.*.id,list("")),0)}"}"
-    assign_public_ip  = "${(var.control_plane_subnet_access == "private") ? "false" : "true"}"
+    display_name        = "${var.label_prefix}management-ad3"
+    assign_public_ip = "${(var.control_plane_subnet_access == "private") ? "false" : "true"}"
+    private_ip       = "${var.assign_private_ip == "true" ? cidrhost(lookup(var.network_cidrs,"managementSubnetAD3"), count.index+2) : ""}"
   }
 
   extended_metadata {
