@@ -14,4 +14,6 @@ runcmd:
   - /bin/systemctl restart firewalld
   - sysctl -p /etc/sysctl.d/98-ip-forward.conf
   - sed -i -e 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
+  - sed -i -e '112 a\ClientAliveInterval 600' /etc/ssh/sshd_config
+  - sed -i -e '113 a\ClientAliveCountMax 2' /etc/ssh/sshd_config
   - restart ssh
