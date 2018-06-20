@@ -193,32 +193,32 @@ variable "flannel_network_cidr" {
 
 variable "etcd_cluster_ingress" {
   description = "A CIDR notation IP range that is allowed cluster access to the instances on the etcd subnet"
-  default     = "10.0.0.0/16"
+  default     = "10.1.0.0/16"
 }
 
 variable "etcd_ssh_ingress" {
   description = "A CIDR notation IP range that is allowed SSH access to the instances on the etcd subnet"
-  default     = "10.0.0.0/16"
+  default     = "10.1.0.0/16"
 }
 
 variable "master_ssh_ingress" {
   description = "A CIDR notation IP range that is allowed SSH access to the instances on the master subnet"
-  default     = "10.0.0.0/16"
+  default     = "10.1.0.0/16"
 }
 
 variable "master_https_ingress" {
   description = "A CIDR notation IP range that is allowed HTTPs access to the instances on the master subnet"
-  default     = "10.0.0.0/16"
+  default     = "10.1.0.0/16"
 }
 
 variable "worker_ssh_ingress" {
   description = "A CIDR notation IP range that is allowed SSH access to the instances on the worker subnet"
-  default     = "10.0.0.0/16"
+  default     = "10.1.0.0/16"
 }
 
 variable "worker_nodeport_ingress" {
   description = "A CIDR notation IP range that is allowed to access service ports to the instances on the worker subnet"
-  default     = "10.0.0.0/16"
+  default     = "10.1.0.0/16"
 }
 
 variable "public_subnet_ssh_ingress" {
@@ -243,7 +243,7 @@ variable "external_icmp_ingress" {
 
 variable "internal_icmp_ingress" {
   description = "A CIDR notation IP range that is allowed to ICMP to instances on all the subnets"
-  default     = "10.0.0.0/16"
+  default     = "10.1.0.0/16"
 }
 
 variable "ssh_private_key" {
