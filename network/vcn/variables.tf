@@ -138,7 +138,7 @@ variable "ingress_cidrs" {
   type = "map"
 
   default = {
-    VPC-CIDR = "10.0.0.0/16"
+    VPC-CIDR = "10.1.0.0/16"
   }
 }
 
@@ -150,32 +150,32 @@ variable "bmc_ingress_cidrs" {
   default = {
     LBAAS-PHOENIX-1-CIDR = "129.144.0.0/12"
     LBAAS-ASHBURN-1-CIDR = "129.213.0.0/16"
-    VCN-CIDR             = "10.0.0.0/16"
+    VCN-CIDR             = "10.1.0.0/16"
   }
 }
 
 variable "etcd_ssh_ingress" {
-  default = "10.0.0.0/16"
+  default = "10.1.0.0/16"
 }
 
 variable "etcd_cluster_ingress" {
-  default = "10.0.0.0/16"
+  default = "10.1.0.0/16"
 }
 
 variable "master_ssh_ingress" {
-  default = "10.0.0.0/16"
+  default = "10.1.0.0/16"
 }
 
 variable "master_https_ingress" {
-  default = "10.0.0.0/16"
+  default = "10.1.0.0/16"
 }
 
 variable "worker_ssh_ingress" {
-  default = "10.0.0.0/16"
+  default = "10.1.0.0/16"
 }
 
 variable "worker_nodeport_ingress" {
-  default = "10.0.0.0/16"
+  default = "10.1.0.0/16"
 }
 
 # For optional NAT instance (when control_plane_subnet_access = "private")
@@ -199,7 +199,7 @@ variable "external_icmp_ingress" {
 
 variable "internal_icmp_ingress" {
   description = "A CIDR notation IP range that is allowed to ICMP to instances on all the subnets"
-  default     = "10.0.0.0/16"
+  default     = "10.1.0.0/16"
 }
 
 variable "nat_instance_ssh_public_key_openssh" {}
