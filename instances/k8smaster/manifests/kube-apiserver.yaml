@@ -17,6 +17,7 @@ spec:
     - --service-cluster-ip-range=10.21.0.0/16
     - --secure-port=443
     - --insecure-port=8080
+    - --service-node-port-range=8000-32767
     - --insecure-bind-address=0.0.0.0
     - --audit-log-maxage=30
     - --audit-log-maxsize=100
