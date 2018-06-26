@@ -18,6 +18,7 @@ spec:
     - --secure-port=443
     - --insecure-port=8080
     - --insecure-bind-address=0.0.0.0
+    - --service-node-port-range=8000-32767
     - --audit-log-maxage=30
     - --audit-log-maxsize=100
     - --audit-log-path=/var/log/apiserver/audit.log
