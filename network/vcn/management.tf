@@ -9,6 +9,7 @@ resource "oci_core_instance" "ManagementInstanceAD1" {
   display_name        = "${var.label_prefix}management-ad1"
   image               = "${lookup(data.oci_core_images.ManagementImageOCID.images[0], "id")}"
   shape               = "${var.management_instance_shape}"
+  preserve_boot_volume = "${var.preserve_boot_volume}"
 
   create_vnic_details {
     subnet_id = "${(var.control_plane_subnet_access == "private") && (var.dedicated_bastion_subnets == "true") ? "${element(concat(oci_core_subnet.ManagementSubnetAD1.*.id,list("")),0)}" : "${oci_core_subnet.PublicSubnetAD1.id}"}"
@@ -35,6 +36,7 @@ resource "oci_core_instance" "ManagementInstanceAD2" {
   display_name        = "${var.label_prefix}management-ad2"
   image               = "${lookup(data.oci_core_images.ManagementImageOCID.images[0], "id")}"
   shape               = "${var.management_instance_shape}"
+  preserve_boot_volume = "${var.preserve_boot_volume}"
 
   create_vnic_details {
     subnet_id = "${(var.control_plane_subnet_access == "private") && (var.dedicated_bastion_subnets == "true") ? "${element(concat(oci_core_subnet.ManagementSubnetAD2.*.id,list("")),0)}" : "${oci_core_subnet.PublicSubnetAD2.id}"}"
@@ -61,6 +63,7 @@ resource "oci_core_instance" "ManagementInstanceAD3" {
   display_name        = "${var.label_prefix}management-ad3"
   image               = "${lookup(data.oci_core_images.ManagementImageOCID.images[0], "id")}"
   shape               = "${var.management_instance_shape}"
+  preserve_boot_volume = "${var.preserve_boot_volume}"
 
   create_vnic_details {
     subnet_id = "${(var.control_plane_subnet_access == "private") && (var.dedicated_bastion_subnets == "true") ? "${element(concat(oci_core_subnet.ManagementSubnetAD3.*.id,list("")),0)}" : "${element(concat(oci_core_subnet.PublicSubnetAD3.*.id,list("")),0)}"}"

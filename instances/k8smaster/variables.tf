@@ -89,3 +89,7 @@ variable "assign_private_ip" {
   description = "Assign a static private ip based on CIDR block for that AD"
   default = false
 }
+
+variable "preserve_boot_volume" {
+  default="true"
+}

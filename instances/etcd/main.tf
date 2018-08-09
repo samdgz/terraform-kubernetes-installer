@@ -9,6 +9,7 @@ resource "oci_core_instance" "TFInstanceEtcd" {
   hostname_label      = "${var.hostname_label_prefix}-${count.index}"
   image               = "${lookup(data.oci_core_images.ImageOCID.images[0], "id")}"
   shape               = "${var.shape}"
+  preserve_boot_volume = "${var.preserve_boot_volume}"
 
   create_vnic_details {
     subnet_id         = "${var.subnet_id}"

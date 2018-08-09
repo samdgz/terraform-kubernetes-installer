@@ -10,6 +10,7 @@ resource "oci_core_instance" "ServiceProxyInstanceAD1" {
   image               = "${lookup(data.oci_core_images.ServiceProxyImageOCID.images[0], "id")}"
   shape               = "${var.serviceproxy_instance_shape}"
   hostname_label      = "${(var.region == "us-ashburn-1") ? "ociash1-${var.regulatory_domain}-${var.product_name}-lbp-01" : "ociphx1-${var.regulatory_domain}-${var.product_name}-lbp-01"}"
+  preserve_boot_volume = "${var.preserve_boot_volume}"
 
   create_vnic_details {
     subnet_id = "${(var.control_plane_subnet_access == "private") && (var.dedicated_bastion_subnets == "true") ? "${element(concat(oci_core_subnet.ServiceProxySubnetAD1.*.id,list("")),0)}" : "${oci_core_subnet.PublicSubnetAD1.id}"}"
@@ -38,6 +39,7 @@ resource "oci_core_instance" "ServiceProxyInstanceAD2" {
   image               = "${lookup(data.oci_core_images.ServiceProxyImageOCID.images[0], "id")}"
   shape               = "${var.serviceproxy_instance_shape}"
   hostname_label      = "${(var.region == "us-ashburn-1") ? "ociash1-${var.regulatory_domain}-${var.product_name}-lbp-02" : "ociphx1-${var.regulatory_domain}-${var.product_name}-lbp-02"}"
+  preserve_boot_volume = "${var.preserve_boot_volume}"
 
   create_vnic_details {
     subnet_id = "${(var.control_plane_subnet_access == "private") && (var.dedicated_bastion_subnets == "true") ? "${element(concat(oci_core_subnet.ServiceProxySubnetAD2.*.id,list("")),0)}" : "${oci_core_subnet.PublicSubnetAD2.id}"}"
@@ -66,6 +68,7 @@ resource "oci_core_instance" "ServiceProxyInstanceAD3" {
   image               = "${lookup(data.oci_core_images.ServiceProxyImageOCID.images[0], "id")}"
   shape               = "${var.serviceproxy_instance_shape}"
   hostname_label      = "${(var.region == "us-ashburn-1") ? "ociash1-${var.regulatory_domain}-${var.product_name}-lbp-03" : "ociphx1-${var.regulatory_domain}-${var.product_name}-lbp-03"}"
+  preserve_boot_volume = "${var.preserve_boot_volume}"
 
   create_vnic_details {
     subnet_id = "${(var.control_plane_subnet_access == "private") && (var.dedicated_bastion_subnets == "true") ? "${element(concat(oci_core_subnet.ServiceProxySubnetAD3.*.id,list("")),0)}" : "${element(concat(oci_core_subnet.PublicSubnetAD3.*.id,list("")),0)}"}"

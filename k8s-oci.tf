@@ -72,28 +72,29 @@ module "vcn" {
   worker_nodeport_ingress                 = "${var.worker_nodeport_ingress}"
   management_instance_oracle_linux_image_name = "${var.management_ol_image_name}"
   management_instance_ssh_public_key_openssh     = "${module.k8s-tls.ssh_public_key_openssh}"
-  management_instance_shape                  = "${var.managementInstanceShape}"
-  management_instance_ad1_enabled            = "${var.management_instance_ad1_enabled}"
-  management_instance_ad2_enabled            = "${var.management_instance_ad2_enabled}"
-  management_instance_ad3_enabled            = "${var.management_instance_ad3_enabled}"
+  management_instance_shape                = "${var.managementInstanceShape}"
+  management_instance_ad1_enabled          = "${var.management_instance_ad1_enabled}"
+  management_instance_ad2_enabled          = "${var.management_instance_ad2_enabled}"
+  management_instance_ad3_enabled          = "${var.management_instance_ad3_enabled}"
   serviceproxy_instance_oracle_linux_image_name = "${var.serviceproxy_ol_image_name}"
   serviceproxy_instance_ssh_public_key_openssh     = "${module.k8s-tls.ssh_public_key_openssh}"
-  serviceproxy_instance_shape                  = "${var.serviceproxyInstanceShape}"
-  serviceproxy_instance_ad1_enabled            = "${var.serviceproxy_instance_ad1_enabled}"
-  serviceproxy_instance_ad2_enabled            = "${var.serviceproxy_instance_ad2_enabled}"
-  serviceproxy_instance_ad3_enabled            = "${var.serviceproxy_instance_ad3_enabled}"
-  domain_name                               = "${var.domain_name}"
-  docker_ver                                = "${var.docker_ver}"
-  flannel_ver                               = "${var.flannel_ver}"
-  management_docker_max_log_size            = "${var.management_docker_max_log_size}"
-  management_docker_max_log_files           = "${var.management_docker_max_log_files}"
-  etcd_endpoints                            = "${var.etcd_endpoints}"
-  reverse_proxy_clount_init                 = "${local.reverse_proxy_clount_init}"
-  reverse_proxy_setup                       = "${local.reverse_proxy_setup}"
-  regulatory_domain                         = "${var.regulatory_domain}"
-  product_name                              = "${var.product_name}"
-  region                                    = "${var.region}"
-  assign_private_ip                         = "true"
+  serviceproxy_instance_shape             = "${var.serviceproxyInstanceShape}"
+  serviceproxy_instance_ad1_enabled       = "${var.serviceproxy_instance_ad1_enabled}"
+  serviceproxy_instance_ad2_enabled       = "${var.serviceproxy_instance_ad2_enabled}"
+  serviceproxy_instance_ad3_enabled       = "${var.serviceproxy_instance_ad3_enabled}"
+  domain_name                             = "${var.domain_name}"
+  docker_ver                              = "${var.docker_ver}"
+  flannel_ver                             = "${var.flannel_ver}"
+  management_docker_max_log_size          = "${var.management_docker_max_log_size}"
+  management_docker_max_log_files         = "${var.management_docker_max_log_files}"
+  etcd_endpoints                          = "${var.etcd_endpoints}"
+  reverse_proxy_clount_init               = "${local.reverse_proxy_clount_init}"
+  reverse_proxy_setup                     = "${local.reverse_proxy_setup}"
+  regulatory_domain                       = "${var.regulatory_domain}"
+  product_name                            = "${var.product_name}"
+  region                                  = "${var.region}"
+  assign_private_ip                       = "true"
+  preserve_boot_volume                    = "${var.preserve_boot_volume}"
 }
 
 ### Compute Instance(s)
@@ -127,6 +128,7 @@ module "instances-etcd-ad1" {
   assign_private_ip           = "${var.etcd_maintain_private_ip == "true" ? "true": "false"}"
   etcd_initial_cluster_state  = "${var.etcd_initial_cluster_state}"
   etcd_initial_cluster        = "${var.etcd_initial_cluster}"
+  preserve_boot_volume        = "${var.preserve_boot_volume}"
 }
 
 module "instances-etcd-ad2" {
@@ -158,6 +160,7 @@ module "instances-etcd-ad2" {
   assign_private_ip           = "${var.etcd_maintain_private_ip == "true" ? "true": "false"}"
   etcd_initial_cluster_state  = "${var.etcd_initial_cluster_state}"
   etcd_initial_cluster        = "${var.etcd_initial_cluster}"
+  preserve_boot_volume        = "${var.preserve_boot_volume}"
 }
 
 module "instances-etcd-ad3" {
@@ -190,6 +193,7 @@ module "instances-etcd-ad3" {
   assign_private_ip           = "${var.etcd_maintain_private_ip == "true" ? "true": "false"}"
   etcd_initial_cluster_state  = "${var.etcd_initial_cluster_state}"
   etcd_initial_cluster        = "${var.etcd_initial_cluster}"
+  preserve_boot_volume        = "${var.preserve_boot_volume}"
 }
 
 module "instances-k8smaster-ad1" {
@@ -226,6 +230,7 @@ module "instances-k8smaster-ad1" {
   tenancy_ocid                = "${var.compartment_ocid}"
   assign_private_ip           = "${var.master_maintain_private_ip}"
   etcd_endpoints              = "${local.etcd_endpoints}"
+  preserve_boot_volume        = "${var.preserve_boot_volume}"
 }
 
 module "instances-k8smaster-ad2" {
@@ -262,6 +267,7 @@ module "instances-k8smaster-ad2" {
   tenancy_ocid                = "${var.compartment_ocid}"
   assign_private_ip           = "${var.master_maintain_private_ip}"
   etcd_endpoints              = "${local.etcd_endpoints}"
+  preserve_boot_volume        = "${var.preserve_boot_volume}"
 }
 
 module "instances-k8smaster-ad3" {
@@ -298,6 +304,7 @@ module "instances-k8smaster-ad3" {
   tenancy_ocid                = "${var.compartment_ocid}"
   assign_private_ip           = "${var.master_maintain_private_ip}"
   etcd_endpoints              = "${local.etcd_endpoints}"
+  preserve_boot_volume        = "${var.preserve_boot_volume}"
 }
 
 module "instances-k8sworker-ad1" {
@@ -338,6 +345,7 @@ module "instances-k8sworker-ad1" {
   network_cidrs               = "${var.network_cidrs}"
   subnet_name                 = "workerSubnetAD1"
   control_plane_subnet_access = "${var.control_plane_subnet_access}"
+  preserve_boot_volume        = "${var.preserve_boot_volume}"
 }
 
 module "instances-k8sworker-ad2" {
@@ -378,6 +386,7 @@ module "instances-k8sworker-ad2" {
   network_cidrs               = "${var.network_cidrs}"
   subnet_name                 = "workerSubnetAD2"
   control_plane_subnet_access = "${var.control_plane_subnet_access}"
+  preserve_boot_volume        = "${var.preserve_boot_volume}"
 }
 
 module "instances-k8sworker-ad3" {
@@ -418,6 +427,7 @@ module "instances-k8sworker-ad3" {
   network_cidrs               = "${var.network_cidrs}"
   subnet_name                 = "workerSubnetAD3"
   control_plane_subnet_access = "${var.control_plane_subnet_access}"
+  preserve_boot_volume        = "${var.preserve_boot_volume}"
 }
 
 ### Load Balancers

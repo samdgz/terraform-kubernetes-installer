@@ -549,3 +549,7 @@ variable serviceproxy_instance_ad2_enabled {
 variable serviceproxy_instance_ad3_enabled {
   default     = "false"
 }
+
+variable "preserve_boot_volume" {
+  default="true"
+}
